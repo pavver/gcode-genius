@@ -4,3 +4,4 @@
 webpack.config.js
 *.vsix
 node_modules/
+media/readme/

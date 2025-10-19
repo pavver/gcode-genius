@@ -5,7 +5,7 @@
 Stop switching between different programs. Visualize, format, edit, and analyze toolpaths directly within your favorite code editor.
 
 <!-- Main Image/GIF: Showcase of key features in action -->
-![G-code Genius in Action](media/readme/1.png)
+![G-code Genius in Action](https://raw.githubusercontent.com/pavver/gcode-genius/refs/heads/master/media/readme/1.png)
 
 ---
 
@@ -22,7 +22,7 @@ Bring perfect order to your G-code with a single command. Our formatter does mor
 *How to use: Simply open the Command Palette (`Ctrl+Shift+P`) and select "Format Document".*
 
 <!-- Image: "Before" and "After" code formatting comparison -->
-![G-code Formatter](media/readme/formatter.png)
+![G-code Formatter](https://raw.githubusercontent.com/pavver/gcode-genius/refs/heads/master/media/readme/formatter.png)
 
 ### 🎨 Dynamic Syntax Highlighting with Guaranteed Readability
 
@@ -33,7 +33,7 @@ No more invisible comments on a dark background! Our highlighting system doesn't
 - **Key Parameter Highlighting**: `X`, `Y`, `Z` coordinates, `I`, `J`, `K` arc parameters, and `F`/`S` feed/speed commands have unique colors for quick visual analysis.
 
 <!-- Image: Highlighting demo on light and dark themes -->
-![Syntax Highlighting](media/readme/higlight.png)
+![Syntax Highlighting](https://github.com/pavver/gcode-genius/raw/master/media/readme/higlight.png)
 
 ### 🌐 Interactive 3D Visualization
 
@@ -58,7 +58,7 @@ Instantly see your toolpath in a full 3D view. The visualizer opens with a singl
     - This creates a fluid workflow where you can visually manage G-code without clicking back into the text editor.
 
 <!-- Image/GIF: Demo of the 3D visualizer, sync, and selection -->
-![3D Visualization](media/readme/visualizer.gif)
+![3D Visualization](https://github.com/pavver/gcode-genius/raw/master/media/readme/visualizer.gif)
 
 ### 🎞️ Toolpath Navigation Slider
 
