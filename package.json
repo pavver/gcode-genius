@@ -1,14 +1,31 @@
 {
   "name": "gcode-genius",
   "displayName": "G-code Genius",
-  "description": "A VS Code extension for advanced G-code visualization and editing",
+  "description": "Visualize, format, and edit G-code (CNC, 3D printing) with syntax highlighting, transformations, and an interactive 3D viewer.",
   "icon": "media/icon.png",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "engines": {
     "vscode": "^1.104.2"
   },
   "categories": [
+    "Programming Languages",
+    "Visualization",
     "Other"
+  ],
+  "keywords": [
+    "g-code",
+    "gcode",
+    "cnc",
+    "3d printing",
+    "gcode viewer",
+    "gcode visualizer",
+    "gcode formatter",
+    "syntax highlighting",
+    "milling",
+    "lathe",
+    "grbl",
+    "marlin",
+    "nc file"
   ],
   "publisher": "pavver",
   "repository": {
