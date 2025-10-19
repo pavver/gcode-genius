@@ -1,0 +1,6 @@
+.vscode/**
+.vscode-test/**
+.gitignore
+webpack.config.js
+*.vsix
+node_modules/

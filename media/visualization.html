@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>G-code Visualization</title>
+    <!--STYLES-->
+    <style>
+        html, body {
+            margin: 0; 
+            overflow: hidden; 
+            width: 100%;
+            height: 100%;
+            background-color: var(--vscode-editor-background);
+        }
+        #canvas-container {
+            position: relative;
+            width: 100%;
+            height: 100%;
+        }
+        canvas { 
+            display: block; 
+        }
+    </style>
+    <script type="importmap">
+        {
+            "imports": {
+                "three": "https://unpkg.com/three@0.158.0/build/three.module.js",
+                "three/addons/": "https://unpkg.com/three@0.158.0/examples/jsm/"
+            }
+        }
+    </script>
+</head>
+<body>
+    <div id="theme-probe"></div>
+    <div id="canvas-container">
+        <div id="selection-box"></div>
+    </div>
+    <script type="module" src="%SCRIPT_URI%"></script>
+</body>
+</html>

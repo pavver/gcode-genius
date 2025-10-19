@@ -1,0 +1,164 @@
+/* Slider Styles */
+#gcode-slider {
+    position: absolute;
+    bottom: 20px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 80%;
+    height: 10px;
+    background-color: var(--vscode-input-background, #3c3c3c);
+    border: 1px solid var(--vscode-input-border, #3c3c3c);
+    -webkit-appearance: none;
+    appearance: none;
+    border-radius: 5px;
+    outline-color: var(--vscode-focusBorder, #007fd4);
+    z-index: 1;
+    display: none; /* Initially hidden */
+}
+
+#gcode-slider::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    appearance: none;
+    width: 20px;
+    height: 20px;
+    background-color: var(--vscode-button-background, #0e639c);
+    border: 1px solid var(--vscode-button-border, transparent);
+    border-radius: 50%;
+    cursor: pointer;
+}
+
+#gcode-slider::-moz-range-thumb {
+    width: 20px;
+    height: 20px;
+    background-color: var(--vscode-button-background, #0e639c);
+    border: 1px solid var(--vscode-button-border, transparent);
+    border-radius: 50%;
+    cursor: pointer;
+}
+
+/* Transformation Panel Styles */
+.transform-panel {
+    display: none;
+    position: absolute;
+    background: var(--vscode-editorWidget-background, #252526);
+    border: 1px solid var(--vscode-widget-border, #303030);
+    box-shadow: var(--vscode-widget-shadow, 0 0 8px 2px #00000033);
+    border-radius: 6px;
+    padding: 15px;
+    color: var(--vscode-editor-foreground, #cccccc);
+    font-family: var(--vscode-font-family, sans-serif);
+    font-size: var(--vscode-font-size, 13px);
+    z-index: 100;
+    width: 280px;
+}
+
+#transform-controls, #move-panel, #rotate-panel, #move-to-origin-panel, #theme-panel {
+    top: 15px;
+    left: 50%;
+    transform: translateX(-50%);
+}
+
+#transform-controls {
+    width: max-content; /* Be as wide as content */
+    max-width: 100%;    /* But don't overflow */
+    display: flex;
+    padding: 5px;
+    justify-content: center; /* For when it wraps */
+    flex-wrap: wrap; /* Allow wrapping */
+}
+
+#transform-controls button.active {
+    background: var(--vscode-button-hoverBackground, #1177bb);
+    border-color: var(--vscode-focusBorder, #007fd4);
+}
+
+.transform-panel button {
+    border: 1px solid var(--vscode-button-border, transparent);
+    background: var(--vscode-button-background, #0e639c);
+    color: var(--vscode-button-foreground, white);
+    padding: 5px 10px;
+    margin: 5px;
+    border-radius: 3px;
+    cursor: pointer;
+    width: 100%;
+}
+
+#transform-controls button {
+    width: auto;
+}
+
+.transform-panel button:hover {
+    background: var(--vscode-button-hoverBackground, #1177bb);
+}
+
+.transform-panel input, .transform-panel select {
+    background: var(--vscode-input-background, #3c3c3c);
+    color: var(--vscode-input-foreground, #cccccc);
+    border: 1px solid var(--vscode-input-border, #3c3c3c);
+    border-radius: 3px;
+    padding: 4px;
+    width: 120px;
+    box-sizing: border-box;
+}
+
+.transform-panel input:focus, .transform-panel select:focus {
+    outline: 1px solid var(--vscode-focus-border, #007fd4);
+}
+
+.transform-panel h4 { 
+    margin-top: 0;
+    margin-bottom: 15px; 
+    font-weight: 600;
+    text-align: center;
+}
+
+.input-group { 
+    display: flex; 
+    justify-content: space-between; 
+    align-items: center; 
+    margin-bottom: 8px; 
+}
+
+.input-group label { 
+    margin-right: 10px; 
+    flex-shrink: 0;
+}
+
+.input-group > div {
+    display: flex;
+    align-items: center;
+}
+
+.color-swatch {
+    width: 16px;
+    height: 16px;
+    border: 1px solid var(--vscode-input-border, #3c3c3c);
+    margin-right: 8px;
+    flex-shrink: 0;
+}
+
+.button-group { 
+    display: flex;
+    justify-content: space-between;
+    margin-top: 15px;
+}
+
+.button-group button { 
+    width: 48%;
+    margin: 0;
+}
+
+/* Selection Box */
+#selection-box {
+    position: absolute;
+    display: none;
+    border: 1px solid var(--vscode-focusBorder, #007fd4);
+    background-color: rgba(0, 127, 212, 0.2);
+    pointer-events: none; /* Allows clicks to go through to the canvas */
+    z-index: 10;
+}
+
+#mto-axes-group {
+    flex-direction: column;
+    align-items: flex-start; /* Align items to the start of the flex container */
+}

@@ -1,0 +1,78 @@
+{
+  "name": "gcode-genius",
+  "displayName": "G-code Genius",
+  "description": "A VS Code extension for advanced G-code visualization and editing",
+  "icon": "media/icon.png",
+  "version": "0.1.0",
+  "engines": {
+    "vscode": "^1.104.2"
+  },
+  "categories": [
+    "Other"
+  ],
+  "publisher": "pavver",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/pavver/gcode-genius.git"
+  },
+  "homepage": "https://github.com/pavver/gcode-genius",
+  "bugs": {
+    "url": "https://github.com/pavver/gcode-genius/issues"
+  },
+  "activationEvents": [
+    "onLanguage:gcode",
+    "onWebviewPanel:gcodeVisualization"
+  ],
+  "main": "./dist/extension.js",
+  "scripts": {
+    "build": "webpack --mode production",
+    "watch": "webpack --mode development --watch"
+  },
+  "contributes": {
+    "commands": [
+      {
+        "command": "gcode-genius.showVisualization",
+        "title": "Show G-code Visualization",
+        "icon": "$(open-preview)"
+      },
+      {
+        "command": "gcode-genius.formatGcode",
+        "title": "Format G-code"
+      }
+    ],
+    "languages": [
+      {
+        "id": "gcode",
+        "aliases": [
+          "G-code",
+          "gcode"
+        ],
+        "extensions": [
+          ".gcode",
+          ".nc",
+          ".ngc",
+          ".cnc",
+          ".g",
+          ".gc",
+          ".tap"
+        ]
+      }
+    ],
+    "menus": {
+      "editor/title": [
+        {
+          "when": "resourceLangId == gcode",
+          "command": "gcode-genius.showVisualization",
+          "group": "navigation@1"
+        }
+      ]
+    }
+  },
+  "dependencies": {
+    "three": "^0.158.0"
+  },
+  "devDependencies": {
+    "webpack": "^5.102.1",
+    "webpack-cli": "^6.0.1"
+  }
+}

@@ -1,0 +1,29 @@
+#theme-probe {
+    display: none;
+
+    /* We'll use standard properties on this dummy element to read theme variables */
+    background-color: var(--vscode-editor-background);
+    color: var(--vscode-editor-foreground); /* for 'feed' color */
+    border-color: var(--vscode-gitDecoration-modifiedResourceForeground); /* for 'rapid' color */
+    outline-color: var(--vscode-editor-selectionBackground); /* for 'highlight' color */
+}
+
+#theme-probe::before {
+    /* Use pseudo-elements to get more properties */
+    content: '';
+    display: none;
+    background-color: var(--vscode-editor-inactiveSelectionBackground); /* for 'dimmed' color */
+    color: var(--vscode-editorHint-foreground); /* for 'hover' color */
+    outline-color: var(--vscode-editorLineNumber-activeForeground); /* for 'transformHelperSphere' color */
+    border-color: var(--vscode-focusBorder); /* for 'pivotSphere' color */
+}
+
+#theme-probe::after {
+    content: '';
+    display: none;
+    background-color: var(--vscode-editor-background); /* for 'ambientLight' */
+    color: var(--vscode-editorWidget-background); /* for 'directionalLight' */
+    border-color: var(--vscode-editorLineNumber-activeForeground); /* for 'highlightSphere' color */
+    outline-color: var(--vscode-button-background); /* for 'boundingBox' color */
+}
+
