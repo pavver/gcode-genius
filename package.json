@@ -3,7 +3,7 @@
   "displayName": "G-code Genius",
   "description": "Visualize, format, and edit G-code (CNC, 3D printing) with syntax highlighting, transformations, and an interactive 3D viewer.",
   "icon": "media/icon.png",
-  "version": "0.1.2",
+  "version": "0.1.3",
   "engines": {
     "vscode": "^1.104.2"
   },
