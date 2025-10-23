@@ -19,6 +19,9 @@ export const materials = {
     line: {
         feed: new THREE.LineBasicMaterial(),
         rapid: new THREE.LineBasicMaterial(),
+        // Semi-transparent variants for future (not-yet-passed) path preview
+        feedTransparent: new THREE.LineBasicMaterial({ transparent: true, opacity: 0.5 }),
+        rapidTransparent: new THREE.LineBasicMaterial({ transparent: true, opacity: 0.5 }),
         highlight: new THREE.LineBasicMaterial({ depthTest: true }),
         dimmed: new THREE.LineBasicMaterial(),
         hover: new THREE.LineBasicMaterial({ depthTest: false }), // Always on top
@@ -55,6 +58,9 @@ export function updateAllMaterials() {
     // Line colors
     materials.line.feed.color.set(getFeedColor(backgroundColor));
     materials.line.rapid.color.set(getRapidColor(backgroundColor));
+    // Keep transparent variants in sync with base colors
+    materials.line.feedTransparent.color.set(getFeedColor(backgroundColor));
+    materials.line.rapidTransparent.color.set(getRapidColor(backgroundColor));
     materials.line.highlight.color.set(getHighlightColor(backgroundColor));
     materials.line.dimmed.color.set(getDimmedColor(backgroundColor));
     materials.line.hover.color.set(getHoverColor(backgroundColor));
