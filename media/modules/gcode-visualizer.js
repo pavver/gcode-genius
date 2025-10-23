@@ -82,9 +82,11 @@ export function updateAllLineColors() {
     else if (isSingleCursor) {
       line.renderOrder = 0;
       if (lineNum < currentLineNumber) {
+        // Past (already executed) path: fully opaque
         line.material = userData.moveCommandType === 'G0' ? materials.line.rapid : materials.line.feed;
       } else {
-        line.material = materials.line.dimmed;
+        // Future (not yet executed) path: same color, 50% transparent
+        line.material = userData.moveCommandType === 'G0' ? materials.line.rapidTransparent : materials.line.feedTransparent;
       }
     }
     // Default case
