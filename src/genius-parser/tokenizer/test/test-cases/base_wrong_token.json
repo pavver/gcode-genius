@@ -1,0 +1,30 @@
+[
+  {
+    "type": "COMMAND_G",
+    "value": "G0",
+    "startOffset": 0,
+    "endOffset": 2,
+    "letter": null
+  },
+  {
+    "type": "ERROR",
+    "value": "Ц2776",
+    "startOffset": 4,
+    "endOffset": 9,
+    "letter": null
+  },
+  {
+    "type": "PARAMETER",
+    "value": 10,
+    "startOffset": 11,
+    "endOffset": 14,
+    "letter": "X"
+  },
+  {
+    "type": "PARAMETER",
+    "value": 20,
+    "startOffset": 15,
+    "endOffset": 18,
+    "letter": "Y"
+  }
+]

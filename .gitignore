@@ -1,5 +1,6 @@
 # Dependencies
 /node_modules
+/src/genius-parser/node_modules
 
 # Logs
 npm-debug.log*
