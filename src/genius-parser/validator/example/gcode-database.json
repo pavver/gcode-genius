@@ -1,0 +1,227 @@
+{
+  "commands": [
+    {
+      "code": "G0",
+      "name": "Rapid Positioning",
+      "description": "Move to position at maximum speed (rapids). Non-cutting move.",
+      "modal_group": "motion",
+      "firmware": [
+        "marlin",
+        "reprapfirmware",
+        "klipper",
+        "grbl",
+        "smoothieware",
+        "mach3",
+        "linuxcnc",
+        "fanuc",
+        "siemens",
+        "haas"
+      ],
+      "parameters": [
+        {
+          "name": "X",
+          "type": "float",
+          "unit": "mm or inches",
+          "description": "Target X position",
+          "required": false,
+          "default": "current position"
+        },
+        {
+          "name": "Y",
+          "type": "float",
+          "unit": "mm or inches",
+          "description": "Target Y position",
+          "required": false,
+          "default": "current position"
+        },
+        {
+          "name": "Z",
+          "type": "float",
+          "unit": "mm or inches",
+          "description": "Target Z position",
+          "required": false,
+          "default": "current position"
+        },
+        {
+          "name": "E",
+          "type": "float",
+          "unit": "mm",
+          "description": "Extruder position (3D printers only)",
+          "required": false,
+          "firmware_specific": [
+            "marlin",
+            "reprapfirmware",
+            "klipper",
+            "smoothieware"
+          ],
+          "default": "current position"
+        },
+        {
+          "name": "F",
+          "type": "float",
+          "unit": "mm/min or inches/min",
+          "description": "Maximum feedrate for this move",
+          "required": false,
+          "min_value": 0,
+          "default": "previous F value or firmware default"
+        },
+        {
+          "name": "S",
+          "type": "float",
+          "unit": "0-255 or percentage",
+          "description": "Laser power (laser mode only)",
+          "required": false,
+          "firmware_specific": [
+            "marlin",
+            "reprapfirmware",
+            "grbl"
+          ],
+          "min_value": 0,
+          "max_value": 255
+        },
+        {
+          "name": "H",
+          "type": "integer",
+          "description": "Endstop check mode (RepRapFirmware): 0=ignore, 1=check",
+          "required": false,
+          "firmware_specific": [
+            "reprapfirmware"
+          ],
+          "allowed_values": [
+            0,
+            1,
+            2
+          ]
+        }
+      ],
+      "constraints": [
+        {
+          "rule": "at_least_one_axis",
+          "params": [
+            "X",
+            "Y",
+            "Z",
+            "E",
+            "A",
+            "B",
+            "C"
+          ],
+          "error": "At least one axis must be specified for movement"
+        }
+      ],
+      "notes": {
+        "marlin": "G0 and G1 are identical on Cartesian/CoreXY/Delta printers",
+        "grbl": "Rapids limited by $110-$112 settings (max velocity per axis)",
+        "reprapfirmware": "May use non-linear path on SCARA kinematics"
+      }
+    },
+    {
+      "code": "G1",
+      "name": "Linear Move",
+      "description": "Linear interpolation move at specified feedrate. Primary motion command.",
+      "modal_group": "motion",
+      "firmware": [
+        "marlin",
+        "reprapfirmware",
+        "klipper",
+        "grbl",
+        "smoothieware",
+        "mach3",
+        "linuxcnc",
+        "fanuc",
+        "siemens",
+        "haas"
+      ],
+      "parameters": [
+        {
+          "name": "X",
+          "type": "float",
+          "unit": "mm or inches",
+          "description": "Target X position",
+          "required": false,
+          "default": "current position"
+        },
+        {
+          "name": "Y",
+          "type": "float",
+          "unit": "mm or inches",
+          "description": "Target Y position",
+          "required": false,
+          "default": "current position"
+        },
+        {
+          "name": "Z",
+          "type": "float",
+          "unit": "mm or inches",
+          "description": "Target Z position",
+          "required": false,
+          "default": "current position"
+        },
+        {
+          "name": "E",
+          "type": "float",
+          "unit": "mm",
+          "description": "Extruder position or amount (3D printers)",
+          "required": false,
+          "firmware_specific": [
+            "marlin",
+            "reprapfirmware",
+            "klipper",
+            "smoothieware"
+          ],
+          "default": "current position"
+        },
+        {
+          "name": "F",
+          "type": "float",
+          "unit": "mm/min or inches/min",
+          "description": "Feedrate (cutting/printing speed)",
+          "required": false,
+          "min_value": 0,
+          "default": "previous F value",
+          "sticky": true
+        },
+        {
+          "name": "S",
+          "type": "float",
+          "unit": "0-255 or percentage",
+          "description": "Laser power (laser mode only)",
+          "required": false,
+          "firmware_specific": [
+            "marlin",
+            "reprapfirmware",
+            "grbl"
+          ],
+          "min_value": 0,
+          "max_value": 255
+        }
+      ],
+      "constraints": [
+        {
+          "rule": "at_least_one_axis",
+          "params": [
+            "X",
+            "Y",
+            "Z",
+            "E",
+            "A",
+            "B",
+            "C",
+            "U",
+            "V",
+            "W"
+          ],
+          "error": "At least one axis must be specified for movement"
+        },
+        {
+          "rule": "feedrate_must_be_set",
+          "condition": "first_motion_command",
+          "error": "Feedrate F must be specified before first G1 move",
+          "firmware_exception": [
+            "reprapfirmware"
+          ]
+        }
+      ]
+    }
+  ]
+}

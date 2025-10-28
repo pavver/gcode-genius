@@ -1,0 +1,44 @@
+[
+  {
+    "severity": "warning",
+    "message": "warning.invalid_spacing_between_tokens",
+    "start": 2,
+    "end": 2
+  },
+  {
+    "severity": "warning",
+    "message": "warning.invalid_spacing_between_tokens",
+    "start": 4,
+    "end": 4
+  },
+  {
+    "severity": "warning",
+    "message": "warning.invalid_spacing_between_tokens",
+    "start": 7,
+    "end": 7
+  },
+  {
+    "severity": "warning",
+    "message": "warning.invalid_spacing_between_tokens",
+    "start": 10,
+    "end": 10
+  },
+  {
+    "severity": "warning",
+    "message": "warning.invalid_spacing_between_tokens",
+    "start": 13,
+    "end": 13
+  },
+  {
+    "severity": "warning",
+    "message": "warning.lowercase_letter",
+    "start": 4,
+    "end": 5
+  },
+  {
+    "severity": "warning",
+    "message": "warning.lowercase_letter",
+    "start": 10,
+    "end": 11
+  }
+]

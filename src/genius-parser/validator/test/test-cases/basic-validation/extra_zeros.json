@@ -1,0 +1,37 @@
+[
+  {
+    "type": "COMMAND_G",
+    "value": "G1",
+    "startOffset": 0,
+    "endOffset": 3,
+    "letter": null
+  },
+  {
+    "type": "PARAMETER",
+    "value": 10,
+    "startOffset": 4,
+    "endOffset": 11,
+    "letter": "X"
+  },
+  {
+    "type": "PARAMETER",
+    "value": 20,
+    "startOffset": 12,
+    "endOffset": 15,
+    "letter": "Y"
+  },
+  {
+    "type": "PARAMETER",
+    "value": 22,
+    "startOffset": 16,
+    "endOffset": 19,
+    "letter": "Z"
+  },
+  {
+    "type": "COMMENT",
+    "value": ";test3",
+    "startOffset": 20,
+    "endOffset": 26,
+    "letter": null
+  }
+]

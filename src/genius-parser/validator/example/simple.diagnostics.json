@@ -1,0 +1,61 @@
+{
+  "diagnostics": [
+    {
+      "severity": "warning",
+      "message": "warning.invalid_spacing_between_tokens",
+      "start": 7,
+      "end": 7
+    }
+  ],
+  "validTokens": [
+    {
+      "type": "COMMENT",
+      "value": "(test1)",
+      "startOffset": 0,
+      "endOffset": 7,
+      "letter": null
+    },
+    {
+      "type": "COMMAND_G",
+      "value": "G0",
+      "startOffset": 7,
+      "endOffset": 9,
+      "letter": null
+    },
+    {
+      "type": "PARAMETER",
+      "value": 10,
+      "startOffset": 10,
+      "endOffset": 13,
+      "letter": "X"
+    },
+    {
+      "type": "COMMENT",
+      "value": "(test2)",
+      "startOffset": 14,
+      "endOffset": 21,
+      "letter": null
+    },
+    {
+      "type": "PARAMETER",
+      "value": 20,
+      "startOffset": 22,
+      "endOffset": 25,
+      "letter": "Y"
+    },
+    {
+      "type": "PARAMETER",
+      "value": 22,
+      "startOffset": 26,
+      "endOffset": 29,
+      "letter": "Z"
+    },
+    {
+      "type": "COMMENT",
+      "value": ";test3",
+      "startOffset": 39,
+      "endOffset": 45,
+      "letter": null
+    }
+  ]
+}

@@ -1,4 +1,4 @@
-import tokenize from './tokenizer/src/index.js';
+import tokenize from './src/index.js';
 import fs from 'fs';
 import path from 'path';
 
@@ -23,4 +23,4 @@ if (outputFile) {
   console.log(jsonOutput);
 }
 
-// node tokenize.js tokenizer\test\test-cases\simple.txt simple.json
+// node tokenize.js test\test-cases\simple.txt simple.json

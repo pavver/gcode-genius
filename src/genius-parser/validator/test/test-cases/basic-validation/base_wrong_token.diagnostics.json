@@ -1,0 +1,20 @@
+[
+  {
+    "severity": "warning",
+    "message": "warning.invalid_spacing_between_tokens",
+    "start": 2,
+    "end": 4
+  },
+  {
+    "severity": "warning",
+    "message": "warning.invalid_spacing_between_tokens",
+    "start": 9,
+    "end": 11
+  },
+  {
+    "severity": "error",
+    "message": "error.wrong_token",
+    "start": 4,
+    "end": 9
+  }
+]

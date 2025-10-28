@@ -1,0 +1,14 @@
+[
+  {
+    "severity": "warning",
+    "message": "warning.extra_zero_in_command",
+    "start": 1,
+    "end": 2
+  },
+  {
+    "severity": "warning",
+    "message": "warning.extra_zero_in_parameter",
+    "start": 7,
+    "end": 11
+  }
+]

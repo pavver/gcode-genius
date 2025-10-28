@@ -1,0 +1,26 @@
+[
+  {
+    "severity": "warning",
+    "message": "warning.invalid_spacing_between_tokens",
+    "start": 2,
+    "end": 2
+  },
+  {
+    "severity": "warning",
+    "message": "warning.invalid_spacing_between_tokens",
+    "start": 5,
+    "end": 5
+  },
+  {
+    "severity": "warning",
+    "message": "warning.invalid_spacing_between_tokens",
+    "start": 8,
+    "end": 8
+  },
+  {
+    "severity": "warning",
+    "message": "warning.invalid_spacing_between_tokens",
+    "start": 11,
+    "end": 11
+  }
+]

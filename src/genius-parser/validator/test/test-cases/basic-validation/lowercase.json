@@ -1,0 +1,46 @@
+[
+  {
+    "type": "LINE_NUMBER",
+    "value": 3,
+    "startOffset": 0,
+    "endOffset": 2,
+    "letter": "N"
+  },
+  {
+    "type": "COMMAND_G",
+    "value": "G0",
+    "startOffset": 2,
+    "endOffset": 4,
+    "letter": null
+  },
+  {
+    "type": "PARAMETER",
+    "value": 10,
+    "startOffset": 4,
+    "endOffset": 7,
+    "letter": "X",
+    "isLowercase": true
+  },
+  {
+    "type": "PARAMETER",
+    "value": 20,
+    "startOffset": 7,
+    "endOffset": 10,
+    "letter": "Y"
+  },
+  {
+    "type": "PARAMETER",
+    "value": 22,
+    "startOffset": 10,
+    "endOffset": 13,
+    "letter": "Z",
+    "isLowercase": true
+  },
+  {
+    "type": "COMMENT",
+    "value": ";555",
+    "startOffset": 13,
+    "endOffset": 17,
+    "letter": null
+  }
+]
