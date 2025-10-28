@@ -1,0 +1,6 @@
+{
+  "severity": "warning",
+  "message": "warning.invalid_spacing_between_tokens",
+  "start": 2,
+  "end": 3
+}

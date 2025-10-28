@@ -1,0 +1,10 @@
+{
+  "gcodeLine": "G0  X10",
+  "diagnostic": {
+    "severity": "warning",
+    "message": "warning.invalid_spacing_between_tokens",
+    "start": 2,
+    "end": 4
+  },
+  "expected": "G0 X10"
+}

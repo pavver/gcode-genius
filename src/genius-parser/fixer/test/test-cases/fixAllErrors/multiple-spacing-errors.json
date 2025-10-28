@@ -1,0 +1,18 @@
+{
+  "gcodeLine": "G0X10  Y20",
+  "diagnostics": [
+    {
+      "severity": "warning",
+      "message": "warning.invalid_spacing_between_tokens",
+      "start": 2,
+      "end": 2
+    },
+    {
+      "severity": "warning",
+      "message": "warning.invalid_spacing_between_tokens",
+      "start": 5,
+      "end": 7
+    }
+  ],
+  "expected": "G0 X10 Y20"
+}
