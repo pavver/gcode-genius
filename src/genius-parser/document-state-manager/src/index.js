@@ -34,7 +34,7 @@ export class DocumentStateManager extends EventEmitter {
     }
 
     const lines = content.split(/\r?\n/);
-    const tokenizedLines = lines.map(line => this.#tokenizer.tokenize(line));
+    const tokenizedLines = lines.map(line => this.#tokenizer(line));
     
     this.#documents.set(filePath, { lines: tokenizedLines });
     this.emit('file:opened', { filePath });
@@ -85,7 +85,7 @@ export class DocumentStateManager extends EventEmitter {
       return;
     }
 
-    const newTokens = this.#tokenizer.tokenize(newText);
+    const newTokens = this.#tokenizer(newText);
     document.lines[lineNumber] = newTokens;
 
     this.emit('line:updated', { filePath, lineNumber, newTokens });
@@ -104,7 +104,7 @@ export class DocumentStateManager extends EventEmitter {
       return;
     }
 
-    const newTokens = this.#tokenizer.tokenize(newText);
+    const newTokens = this.#tokenizer(newText);
     document.lines.splice(lineNumber, 0, newTokens);
 
     this.emit('line:added', { filePath, lineNumber, newTokens });
