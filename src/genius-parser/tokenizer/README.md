@@ -22,7 +22,7 @@ tokenizer/
 
 ## Implementation Details
 
-The tokenizer's main logic resides in `src/index.js`. It uses a set of regular expressions to identify and extract different components of a G-code line.
+The tokenizer is a default export function `tokenize(line)` from `src/index.js`. It uses a set of regular expressions to identify and extract different components of a G-code line.
 
 ### Token Types
 
@@ -36,7 +36,7 @@ The tokenizer can identify the following token types:
 
 ### Output
 
-The `tokenize` function returns an object containing an array of token objects. Each token object has the following structure:
+The `tokenize` function returns an array of token objects. Each token object has the following structure:
 
 ```json
 {
@@ -51,8 +51,13 @@ The `tokenize` function returns an object containing an array of token objects. 
 
 ## Usage Example
 
-The `example/tokenize.js` script demonstrates how to use the tokenizer. It reads a G-code file, tokenizes its content, and writes the resulting tokens to a JSON file.
+The `example/tokenize.js` script demonstrates how to use the tokenizer.
 
-To run the example:
-1.  Navigate to the `tokenizer/example` directory.
-2.  Run the script: `node tokenize.js`
+```javascript
+import tokenize from './src/index.js';
+
+const line = 'G0 X10 Y20 (move to position)';
+const tokens = tokenize(line);
+
+console.log(tokens);
+```

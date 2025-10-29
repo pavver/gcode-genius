@@ -11,12 +11,12 @@ export class DocumentStateManager extends EventEmitter {
   #documents = new Map();
 
   /**
-   * @param {object} tokenizer An instance of the tokenizer component.
+   * @param {function} tokenizer A function that takes a string and returns an array of tokens.
    */
   constructor(tokenizer) {
     super();
-    if (!tokenizer || typeof tokenizer.tokenize !== 'function') {
-      throw new Error('A valid tokenizer instance must be provided.');
+    if (typeof tokenizer !== 'function') {
+      throw new Error('A valid tokenizer function must be provided.');
     }
     this.#tokenizer = tokenizer;
   }
@@ -27,6 +27,7 @@ export class DocumentStateManager extends EventEmitter {
    * @param {string} content The initial content of the file.
    */
   openFile(filePath, content) {
+    console.log(`[DocumentStateManager] Opening file: ${filePath}`);
     if (this.#documents.has(filePath)) {
       console.warn(`File ${filePath} is already open.`);
       return;
@@ -51,6 +52,24 @@ export class DocumentStateManager extends EventEmitter {
 
     this.#documents.delete(filePath);
     this.emit('file:closed', { filePath });
+  }
+
+  /**
+   * Re-tokenizes the entire content of a document. Useful when many changes have occurred.
+   * @param {string} filePath The unique identifier for the file.
+   * @param {string} content The new, full content of the file.
+   */
+  updateFullDocument(filePath, content) {
+    if (!this.#documents.has(filePath)) {
+      console.warn(`Attempted to update a document that was not open: ${filePath}`);
+      return;
+    }
+
+    const lines = content.split(/\r?\n/);
+    const tokenizedLines = lines.map(line => this.#tokenizer(line));
+    
+    this.#documents.set(filePath, { lines: tokenizedLines });
+    this.emit('file:updated', { filePath });
   }
 
   /**
