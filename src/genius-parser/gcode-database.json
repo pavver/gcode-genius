@@ -1,0 +1,2658 @@
+{
+  "version": "1.0.0",
+  "description": "Complete GCode command database with validation rules for parser implementation. Generated with GPT, needs verification",
+  "last_updated": "2025-10-24",
+  
+  "firmware": [
+    {
+      "id": "marlin",
+      "name": "Marlin",
+      "version_range": "1.0 - 2.1.x",
+      "description": "Open source firmware for FDM 3D printers, CNC, and laser engravers",
+      "target_hardware": ["Arduino Mega 2560", "32-bit ARM", "STM32", "LPC1768", "ESP32"],
+      "dialect": "RepRap extended",
+      "case_sensitive": false,
+      "comment_style": [";"],
+      "line_numbers_supported": true,
+      "checksum_supported": true,
+      "max_line_length": 256
+    },
+    {
+      "id": "reprapfirmware",
+      "name": "RepRapFirmware",
+      "version_range": "2.x - 3.5+",
+      "description": "Advanced firmware for Duet controllers with meta-programming capabilities",
+      "target_hardware": ["Duet 2", "Duet 3", "Fly boards"],
+      "dialect": "RepRap extended with expressions",
+      "case_sensitive": false,
+      "comment_style": [";", "()"],
+      "line_numbers_supported": true,
+      "checksum_supported": true,
+      "crc_supported": true,
+      "max_line_length": 512,
+      "supports_expressions": true,
+      "supports_conditionals": true,
+      "supports_quoted_strings": true
+    },
+    {
+      "id": "klipper",
+      "name": "Klipper",
+      "version_range": "0.8 - 0.12+",
+      "description": "High-speed 3D printer firmware with host-based processing",
+      "target_hardware": ["Raspberry Pi + MCU"],
+      "dialect": "RepRap base with extended commands",
+      "case_sensitive": false,
+      "comment_style": [";"],
+      "line_numbers_supported": true,
+      "checksum_supported": true,
+      "max_line_length": 512,
+      "extended_commands_uppercase": true
+    },
+    {
+      "id": "grbl",
+      "name": "GRBL",
+      "version_range": "0.9 - 1.1h",
+      "description": "Minimalist CNC firmware for Arduino",
+      "target_hardware": ["Arduino Uno", "Arduino Nano", "ATmega328p"],
+      "dialect": "NIST RS274/NGC subset",
+      "case_sensitive": false,
+      "comment_style": ["()", ";"],
+      "line_numbers_supported": true,
+      "checksum_supported": true,
+      "max_line_length": 80,
+      "realtime_commands": ["?", "!", "~", "ctrl-X"]
+    },
+    {
+      "id": "smoothieware",
+      "name": "Smoothieware",
+      "version_range": "edge",
+      "description": "Modular firmware for 3D printers, lasers, and CNC",
+      "target_hardware": ["Smoothieboard LPC1769"],
+      "dialect": "RepRap extended",
+      "case_sensitive": false,
+      "comment_style": [";"],
+      "line_numbers_supported": true,
+      "checksum_supported": true,
+      "max_line_length": 256
+    },
+    {
+      "id": "mach3",
+      "name": "Mach3",
+      "version_range": "R3.043",
+      "description": "Windows-based CNC control software",
+      "target_hardware": ["PC with parallel port or USB controller"],
+      "dialect": "NIST RS274/NGC extended",
+      "case_sensitive": false,
+      "comment_style": ["()", ";"],
+      "line_numbers_supported": true,
+      "checksum_supported": false,
+      "max_line_length": 256,
+      "supports_variables": true,
+      "supports_expressions": true,
+      "supports_subroutines": true
+    },
+    {
+      "id": "linuxcnc",
+      "name": "LinuxCNC",
+      "version_range": "2.8 - 2.9",
+      "description": "Real-time Linux CNC control (reference RS274/NGC implementation)",
+      "target_hardware": ["Linux PC with RT kernel"],
+      "dialect": "RS274/NGC (reference implementation)",
+      "case_sensitive": false,
+      "comment_style": ["()", ";"],
+      "line_numbers_supported": true,
+      "checksum_supported": false,
+      "max_line_length": 256,
+      "supports_variables": true,
+      "supports_expressions": true,
+      "supports_subroutines": true
+    },
+    {
+      "id": "fanuc",
+      "name": "FANUC",
+      "version_range": "0i, 30i, 31i, 32i",
+      "description": "Industrial CNC controller",
+      "target_hardware": ["FANUC industrial controllers"],
+      "dialect": "ISO 6983 with FANUC extensions",
+      "case_sensitive": false,
+      "comment_style": ["()", ";"],
+      "line_numbers_supported": true,
+      "checksum_supported": false,
+      "max_line_length": 256,
+      "supports_variables": true,
+      "supports_macro_b": true
+    },
+    {
+      "id": "siemens",
+      "name": "Siemens SINUMERIK",
+      "version_range": "808D, 828D, 840D sl",
+      "description": "Industrial multi-axis CNC controller",
+      "target_hardware": ["Siemens industrial controllers"],
+      "dialect": "ISO or Siemens mode",
+      "case_sensitive": false,
+      "comment_style": [";"],
+      "line_numbers_supported": true,
+      "checksum_supported": false,
+      "max_line_length": 256,
+      "supports_variables": true,
+      "dual_mode": true
+    },
+    {
+      "id": "haas",
+      "name": "Haas NGC",
+      "version_range": "NGC",
+      "description": "Haas CNC machine controller",
+      "target_hardware": ["Haas CNC machines"],
+      "dialect": "FANUC-style ISO",
+      "case_sensitive": false,
+      "comment_style": ["()"],
+      "line_numbers_supported": true,
+      "checksum_supported": false,
+      "max_line_length": 256,
+      "supports_variables": true
+    }
+  ],
+  
+  "commands": [
+    {
+      "code": "G0",
+      "name": "Rapid Positioning",
+      "description": "Move to position at maximum speed (rapids). Non-cutting move.",
+      "modal_group": "motion",
+      "firmware": ["marlin", "reprapfirmware", "klipper", "grbl", "smoothieware", "mach3", "linuxcnc", "fanuc", "siemens", "haas"],
+      "parameters": [
+        {
+          "name": "X",
+          "type": "float",
+          "unit": "mm or inches",
+          "description": "Target X position",
+          "required": false,
+          "default": "current position"
+        },
+        {
+          "name": "Y",
+          "type": "float",
+          "unit": "mm or inches",
+          "description": "Target Y position",
+          "required": false,
+          "default": "current position"
+        },
+        {
+          "name": "Z",
+          "type": "float",
+          "unit": "mm or inches",
+          "description": "Target Z position",
+          "required": false,
+          "default": "current position"
+        },
+        {
+          "name": "E",
+          "type": "float",
+          "unit": "mm",
+          "description": "Extruder position (3D printers only)",
+          "required": false,
+          "firmware_specific": ["marlin", "reprapfirmware", "klipper", "smoothieware"],
+          "default": "current position"
+        },
+        {
+          "name": "F",
+          "type": "float",
+          "unit": "mm/min or inches/min",
+          "description": "Maximum feedrate for this move",
+          "required": false,
+          "min_value": 0,
+          "default": "previous F value or firmware default"
+        },
+        {
+          "name": "S",
+          "type": "float",
+          "unit": "0-255 or percentage",
+          "description": "Laser power (laser mode only)",
+          "required": false,
+          "firmware_specific": ["marlin", "reprapfirmware", "grbl"],
+          "min_value": 0,
+          "max_value": 255
+        },
+        {
+          "name": "H",
+          "type": "integer",
+          "description": "Endstop check mode (RepRapFirmware): 0=ignore, 1=check",
+          "required": false,
+          "firmware_specific": ["reprapfirmware"],
+          "allowed_values": [0, 1, 2]
+        }
+      ],
+      "constraints": [
+        {
+          "rule": "at_least_one_axis",
+          "params": ["X", "Y", "Z", "E", "A", "B", "C"],
+          "error": "At least one axis must be specified for movement"
+        }
+      ],
+      "notes": {
+        "marlin": "G0 and G1 are identical on Cartesian/CoreXY/Delta printers",
+        "grbl": "Rapids limited by $110-$112 settings (max velocity per axis)",
+        "reprapfirmware": "May use non-linear path on SCARA kinematics"
+      }
+    },
+    
+    {
+      "code": "G1",
+      "name": "Linear Move",
+      "description": "Linear interpolation move at specified feedrate. Primary motion command.",
+      "modal_group": "motion",
+      "firmware": ["marlin", "reprapfirmware", "klipper", "grbl", "smoothieware", "mach3", "linuxcnc", "fanuc", "siemens", "haas"],
+      "parameters": [
+        {
+          "name": "X",
+          "type": "float",
+          "unit": "mm or inches",
+          "description": "Target X position",
+          "required": false,
+          "default": "current position"
+        },
+        {
+          "name": "Y",
+          "type": "float",
+          "unit": "mm or inches",
+          "description": "Target Y position",
+          "required": false,
+          "default": "current position"
+        },
+        {
+          "name": "Z",
+          "type": "float",
+          "unit": "mm or inches",
+          "description": "Target Z position",
+          "required": false,
+          "default": "current position"
+        },
+        {
+          "name": "E",
+          "type": "float",
+          "unit": "mm",
+          "description": "Extruder position or amount (3D printers)",
+          "required": false,
+          "firmware_specific": ["marlin", "reprapfirmware", "klipper", "smoothieware"],
+          "default": "current position"
+        },
+        {
+          "name": "F",
+          "type": "float",
+          "unit": "mm/min or inches/min",
+          "description": "Feedrate (cutting/printing speed)",
+          "required": false,
+          "min_value": 0,
+          "default": "previous F value",
+          "sticky": true
+        },
+        {
+          "name": "S",
+          "type": "float",
+          "unit": "0-255 or percentage",
+          "description": "Laser power (laser mode only)",
+          "required": false,
+          "firmware_specific": ["marlin", "reprapfirmware", "grbl"],
+          "min_value": 0,
+          "max_value": 255
+        }
+      ],
+      "constraints": [
+        {
+          "rule": "at_least_one_axis",
+          "params": ["X", "Y", "Z", "E", "A", "B", "C", "U", "V", "W"],
+          "error": "At least one axis must be specified for movement"
+        },
+        {
+          "rule": "feedrate_must_be_set",
+          "condition": "first_motion_command",
+          "error": "Feedrate F must be specified before first G1 move",
+          "firmware_exception": ["reprapfirmware"]
+        },
+        {
+          "rule": "require",
+              "params": ["F"],
+          "error": "Feedrate F must be specified",
+          "firmware_exception": ["grbl"]
+        }
+      ]
+    },
+    
+    {
+      "code": "G2",
+      "name": "Clockwise Arc",
+      "description": "Circular interpolation (arc) in clockwise direction",
+      "modal_group": "motion",
+      "firmware": ["marlin", "reprapfirmware", "klipper", "grbl", "smoothieware", "mach3", "linuxcnc", "fanuc", "siemens", "haas"],
+      "parameters": [
+        {
+          "name": "X",
+          "type": "float",
+          "unit": "mm or inches",
+          "description": "Target X position (arc endpoint)",
+          "required": false,
+          "default": "current position"
+        },
+        {
+          "name": "Y",
+          "type": "float",
+          "unit": "mm or inches",
+          "description": "Target Y position (arc endpoint)",
+          "required": false,
+          "default": "current position"
+        },
+        {
+          "name": "Z",
+          "type": "float",
+          "unit": "mm or inches",
+          "description": "Target Z position (for helical arcs)",
+          "required": false,
+          "default": "current position"
+        },
+        {
+          "name": "I",
+          "type": "float",
+          "unit": "mm or inches",
+          "description": "Arc center offset from current X position",
+          "required": false
+        },
+        {
+          "name": "J",
+          "type": "float",
+          "unit": "mm or inches",
+          "description": "Arc center offset from current Y position",
+          "required": false
+        },
+        {
+          "name": "K",
+          "type": "float",
+          "unit": "mm or inches",
+          "description": "Arc center offset from current Z position (for helical arcs)",
+          "required": false
+        },
+        {
+          "name": "R",
+          "type": "float",
+          "unit": "mm or inches",
+          "description": "Arc radius (alternative to I/J/K)",
+          "required": false,
+          "min_value": 0
+        },
+        {
+          "name": "E",
+          "type": "float",
+          "unit": "mm",
+          "description": "Extruder amount (3D printers)",
+          "required": false,
+          "firmware_specific": ["marlin", "reprapfirmware", "klipper", "smoothieware"]
+        },
+        {
+          "name": "F",
+          "type": "float",
+          "unit": "mm/min",
+          "description": "Feedrate for arc",
+          "required": false,
+          "min_value": 0,
+          "sticky": true
+        },
+        {
+          "name": "P",
+          "type": "integer",
+          "description": "Number of complete circles before arriving at target",
+          "required": false,
+          "firmware_specific": ["linuxcnc", "mach3"],
+          "min_value": 0
+        }
+      ],
+      "constraints": [
+        {
+          "rule": "require_one_group",
+          "groups": [
+            ["R"],
+            ["I", "J"],
+            ["I", "K"],
+            ["J", "K"]
+          ],
+          "error": "Must specify either R (radius) or center offsets (I/J/K for active plane)",
+          "details": "Cannot mix R with I/J/K. Choose radius format OR center format."
+        },
+        {
+          "rule": "mutually_exclusive",
+          "params": ["R", "I"],
+          "error": "Cannot use R and I together"
+        },
+        {
+          "rule": "mutually_exclusive",
+          "params": ["R", "J"],
+          "error": "Cannot use R and J together"
+        },
+        {
+          "rule": "mutually_exclusive",
+          "params": ["R", "K"],
+          "error": "Cannot use R and K together"
+        },
+        {
+          "rule": "plane_dependent_offsets",
+          "description": "I/J/K usage depends on active plane (G17/G18/G19)",
+          "planes": {
+            "G17": ["I", "J"],
+            "G18": ["I", "K"],
+            "G19": ["J", "K"]
+          }
+        },
+        {
+          "rule": "endpoint_required",
+          "params": ["X", "Y", "Z"],
+          "condition": "at_least_one_in_active_plane",
+          "error": "Must specify endpoint in active plane"
+        }
+      ],
+      "firmware_variations": [
+        {
+          "firmware": ["marlin"],
+          "notes": "Not supported on DELTA printers. Requires ARC_SUPPORT enabled.",
+          "limitations": ["no_delta_support"]
+        },
+        {
+          "firmware": ["klipper"],
+          "notes": "Requires [gcode_arcs] section in configuration",
+          "config_required": true
+        },
+        {
+          "firmware": ["grbl"],
+          "notes": "Arc tolerance controlled by $12 setting"
+        }
+      ]
+    },
+    
+    {
+      "code": "G3",
+      "name": "Counter-Clockwise Arc",
+      "description": "Circular interpolation (arc) in counter-clockwise direction",
+      "modal_group": "motion",
+      "firmware": ["marlin", "reprapfirmware", "klipper", "grbl", "smoothieware", "mach3", "linuxcnc", "fanuc", "siemens", "haas"],
+      "parameters": [
+        {
+          "name": "X",
+          "type": "float",
+          "unit": "mm or inches",
+          "description": "Target X position (arc endpoint)",
+          "required": false,
+          "default": "current position"
+        },
+        {
+          "name": "Y",
+          "type": "float",
+          "unit": "mm or inches",
+          "description": "Target Y position (arc endpoint)",
+          "required": false,
+          "default": "current position"
+        },
+        {
+          "name": "Z",
+          "type": "float",
+          "unit": "mm or inches",
+          "description": "Target Z position (for helical arcs)",
+          "required": false,
+          "default": "current position"
+        },
+        {
+          "name": "I",
+          "type": "float",
+          "unit": "mm or inches",
+          "description": "Arc center offset from current X position",
+          "required": false
+        },
+        {
+          "name": "J",
+          "type": "float",
+          "unit": "mm or inches",
+          "description": "Arc center offset from current Y position",
+          "required": false
+        },
+        {
+          "name": "K",
+          "type": "float",
+          "unit": "mm or inches",
+          "description": "Arc center offset from current Z position",
+          "required": false
+        },
+        {
+          "name": "R",
+          "type": "float",
+          "unit": "mm or inches",
+          "description": "Arc radius (alternative to I/J/K)",
+          "required": false,
+          "min_value": 0
+        },
+        {
+          "name": "E",
+          "type": "float",
+          "unit": "mm",
+          "description": "Extruder amount (3D printers)",
+          "required": false,
+          "firmware_specific": ["marlin", "reprapfirmware", "klipper", "smoothieware"]
+        },
+        {
+          "name": "F",
+          "type": "float",
+          "unit": "mm/min",
+          "description": "Feedrate for arc",
+          "required": false,
+          "sticky": true
+        }
+      ],
+      "constraints": [
+        {
+          "rule": "require_one_group",
+          "groups": [
+            ["R"],
+            ["I", "J"],
+            ["I", "K"],
+            ["J", "K"]
+          ],
+          "error": "Must specify either R (radius) or center offsets (I/J/K)"
+        }
+      ]
+    },
+    
+    {
+      "code": "G4",
+      "name": "Dwell",
+      "description": "Pause execution for specified time. Motors remain powered.",
+      "modal_group": "non_modal",
+      "firmware": ["marlin", "reprapfirmware", "klipper", "grbl", "smoothieware", "mach3", "linuxcnc", "fanuc", "siemens", "haas"],
+      "parameters": [
+        {
+          "name": "P",
+          "type": "float",
+          "unit": "milliseconds or seconds",
+          "description": "Dwell time (firmware dependent: ms for most, seconds for GRBL)",
+          "required": false
+        },
+        {
+          "name": "S",
+          "type": "float",
+          "unit": "seconds",
+          "description": "Dwell time in seconds (Marlin, RepRapFirmware)",
+          "required": false,
+          "firmware_specific": ["marlin", "reprapfirmware", "smoothieware"]
+        }
+      ],
+      "constraints": [
+        {
+          "rule": "require_one",
+          "params": ["P", "S"],
+          "error": "Must specify either P or S parameter for dwell time"
+        }
+      ],
+      "firmware_variations": [
+        {
+          "firmware": ["grbl"],
+          "notes": "P is in SECONDS, not milliseconds. P0.5 = 500ms dwell",
+          "parameter_override": {
+            "P": {
+              "unit": "seconds"
+            }
+          }
+        },
+        {
+          "firmware": ["marlin", "reprapfirmware"],
+          "notes": "P=milliseconds, S=seconds. Both accepted."
+        }
+      ]
+    },
+    
+    {
+      "code": "G10",
+      "name": "Retract / Set Tool Offset",
+      "description": "Firmware retraction (3D) or tool offset setting (CNC)",
+      "modal_group": "non_modal",
+      "firmware": ["marlin", "reprapfirmware", "klipper", "grbl", "smoothieware", "mach3", "linuxcnc"],
+      "has_multiple_meanings": true,
+      "variants": [
+        {
+          "variant": "retract",
+          "description": "Firmware filament retraction (3D printers)",
+          "firmware": ["marlin", "klipper", "smoothieware"],
+          "parameters": [],
+          "constraints": [
+            {
+              "rule": "no_parameters",
+              "error": "G10 retract takes no parameters"
+            }
+          ],
+          "notes": "Uses settings from M207"
+        },
+        {
+          "variant": "tool_offset",
+          "description": "Set tool offset and temperatures (RepRapFirmware)",
+          "firmware": ["reprapfirmware"],
+          "parameters": [
+            {
+              "name": "P",
+              "type": "integer",
+              "description": "Tool number",
+              "required": true,
+              "min_value": 0
+            },
+            {
+              "name": "X",
+              "type": "float",
+              "description": "X offset",
+              "required": false
+            },
+            {
+              "name": "Y",
+              "type": "float",
+              "description": "Y offset",
+              "required": false
+            },
+            {
+              "name": "Z",
+              "type": "float",
+              "description": "Z offset",
+              "required": false
+            },
+            {
+              "name": "S",
+              "type": "float",
+              "description": "Active temperature",
+              "required": false
+            },
+            {
+              "name": "R",
+              "type": "float",
+              "description": "Standby temperature",
+              "required": false
+            }
+          ],
+          "constraints": [
+            {
+              "rule": "require",
+              "params": ["P"],
+              "error": "Tool number P required"
+            }
+          ]
+        },
+        {
+          "variant": "workspace_offset",
+          "description": "Set workspace coordinate offset (CNC)",
+          "firmware": ["grbl", "linuxcnc", "mach3"],
+          "parameters": [
+            {
+              "name": "L",
+              "type": "integer",
+              "description": "Mode: L2=set offset, L20=set to current position",
+              "required": true,
+              "allowed_values": [2, 20]
+            },
+            {
+              "name": "P",
+              "type": "integer",
+              "description": "Coordinate system (1=G54, 2=G55, etc)",
+              "required": true,
+              "min_value": 1,
+              "max_value": 6
+            },
+            {
+              "name": "X",
+              "type": "float",
+              "description": "X offset value",
+              "required": false
+            },
+            {
+              "name": "Y",
+              "type": "float",
+              "description": "Y offset value",
+              "required": false
+            },
+            {
+              "name": "Z",
+              "type": "float",
+              "description": "Z offset value",
+              "required": false
+            }
+          ],
+          "constraints": [
+            {
+              "rule": "all_required",
+              "params": ["L", "P"],
+              "error": "Both L and P parameters required for workspace offset"
+            }
+          ]
+        }
+      ]
+    },
+    
+    {
+      "code": "G11",
+      "name": "Unretract / Recover",
+      "description": "Firmware filament unretraction (reverse of G10 retract)",
+      "modal_group": "non_modal",
+      "firmware": ["marlin", "reprapfirmware", "klipper", "smoothieware"],
+      "parameters": [],
+      "constraints": [
+        {
+          "rule": "no_parameters",
+          "error": "G11 takes no parameters"
+        }
+      ],
+      "notes": "Uses settings from M208"
+    },
+    
+    {
+      "code": "G17",
+      "name": "XY Plane Selection",
+      "description": "Select XY plane for arc commands (G2/G3)",
+      "modal_group": "plane",
+      "firmware": ["marlin", "grbl", "mach3", "linuxcnc", "fanuc", "siemens", "haas"],
+      "parameters": [],
+      "constraints": [
+        {
+          "rule": "no_parameters",
+          "error": "G17 takes no parameters"
+        }
+      ],
+      "notes": "Default plane on most systems"
+    },
+    
+    {
+      "code": "G18",
+      "name": "ZX Plane Selection",
+      "description": "Select ZX plane for arc commands (G2/G3)",
+      "modal_group": "plane",
+      "firmware": ["marlin", "grbl", "mach3", "linuxcnc", "fanuc", "siemens", "haas"],
+      "parameters": [],
+      "constraints": [
+        {
+          "rule": "no_parameters",
+          "error": "G18 takes no parameters"
+        }
+      ]
+    },
+    
+    {
+      "code": "G19",
+      "name": "YZ Plane Selection",
+      "description": "Select YZ plane for arc commands (G2/G3)",
+      "modal_group": "plane",
+      "firmware": ["marlin", "grbl", "mach3", "linuxcnc", "fanuc", "siemens", "haas"],
+      "parameters": [],
+      "constraints": [
+        {
+          "rule": "no_parameters",
+          "error": "G19 takes no parameters"
+        }
+      ]
+    },
+    
+    {
+      "code": "G20",
+      "name": "Inches",
+      "description": "Set units to inches for all coordinates",
+      "modal_group": "units",
+      "firmware": ["marlin", "reprapfirmware", "grbl", "smoothieware", "mach3", "linuxcnc", "fanuc", "siemens", "haas"],
+      "parameters": [],
+      "constraints": [
+        {
+          "rule": "no_parameters",
+          "error": "G20 takes no parameters"
+        }
+      ],
+      "firmware_variations": [
+        {
+          "firmware": ["klipper"],
+          "supported": false,
+          "notes": "Not supported. Klipper always uses millimeters."
+        }
+      ]
+    },
+    
+    {
+      "code": "G21",
+      "name": "Millimeters",
+      "description": "Set units to millimeters for all coordinates (default)",
+      "modal_group": "units",
+      "firmware": ["marlin", "reprapfirmware", "klipper", "grbl", "smoothieware", "mach3", "linuxcnc", "fanuc", "siemens", "haas"],
+      "parameters": [],
+      "constraints": [
+        {
+          "rule": "no_parameters",
+          "error": "G21 takes no parameters"
+        }
+      ]
+    },
+    
+    {
+      "code": "G28",
+      "name": "Home / Move to Origin",
+      "description": "Home specified axes (find endstops) or move to predefined home position",
+      "modal_group": "non_modal",
+      "firmware": ["marlin", "reprapfirmware", "klipper", "smoothieware", "mach3", "linuxcnc"],
+      "parameters": [
+        {
+          "name": "X",
+          "type": "flag",
+          "description": "Home X axis",
+          "required": false
+        },
+        {
+          "name": "Y",
+          "type": "flag",
+          "description": "Home Y axis",
+          "required": false
+        },
+        {
+          "name": "Z",
+          "type": "flag",
+          "description": "Home Z axis",
+          "required": false
+        },
+        {
+          "name": "O",
+          "type": "flag",
+          "description": "Home only if position unknown (Marlin)",
+          "required": false,
+          "firmware_specific": ["marlin"]
+        },
+        {
+          "name": "R",
+          "type": "float",
+          "description": "Raise Z by this amount before homing (Marlin)",
+          "required": false,
+          "firmware_specific": ["marlin"]
+        }
+      ],
+      "constraints": [
+        {
+          "rule": "no_axes_means_all",
+          "description": "If no axes specified, home all axes"
+        }
+      ],
+      "firmware_variations": [
+        {
+          "firmware": ["reprapfirmware"],
+          "notes": "Executes homeall.g macro if no axes, or homex.g/homey.g/homez.g for specific axes"
+        },
+        {
+          "firmware": ["grbl"],
+          "supported": false,
+          "notes": "Use $H command instead of G28"
+        },
+        {
+          "firmware": ["mach3"],
+          "notes": "Moves to predefined G28 position, not homing. Use Ref All Home button for homing."
+        }
+      ]
+    },
+    
+    {
+      "code": "G29",
+      "name": "Bed Leveling",
+      "description": "Auto bed leveling / mesh bed leveling probe sequence",
+      "modal_group": "non_modal",
+      "firmware": ["marlin", "reprapfirmware", "klipper", "smoothieware"],
+      "parameters": [
+        {
+          "name": "S",
+          "type": "integer",
+          "description": "Sub-command (varies by firmware and leveling type)",
+          "required": false,
+          "firmware_specific": ["marlin"]
+        },
+        {
+          "name": "P",
+          "type": "integer",
+          "description": "UBL phase/command (Marlin UBL)",
+          "required": false,
+          "firmware_specific": ["marlin"]
+        }
+      ],
+      "firmware_variations": [
+        {
+          "firmware": ["marlin"],
+          "notes": "Behavior depends on leveling type: AUTO_BED_LEVELING_LINEAR, BILINEAR, 3POINT, UBL. UBL has many sub-commands."
+        },
+        {
+          "firmware": ["reprapfirmware"],
+          "notes": "Executes bed.g macro file"
+        },
+        {
+          "firmware": ["klipper"],
+          "notes": "Use BED_MESH_CALIBRATE extended command instead"
+        }
+      ]
+    },
+    
+    {
+      "code": "G30",
+      "name": "Single Z Probe",
+      "description": "Probe bed at current XY position",
+      "modal_group": "non_modal",
+      "firmware": ["marlin", "reprapfirmware", "klipper", "smoothieware", "grbl"],
+      "parameters": [
+        {
+          "name": "X",
+          "type": "float",
+          "description": "X position to probe at (RepRapFirmware)",
+          "required": false,
+          "firmware_specific": ["reprapfirmware"]
+        },
+        {
+          "name": "Y",
+          "type": "float",
+          "description": "Y position to probe at (RepRapFirmware)",
+          "required": false,
+          "firmware_specific": ["reprapfirmware"]
+        },
+        {
+          "name": "S",
+          "type": "integer",
+          "description": "Action: -1=no action, 0=set Z, 1=calculate (RepRapFirmware)",
+          "required": false,
+          "firmware_specific": ["reprapfirmware"],
+          "allowed_values": [-1, 0, 1]
+        }
+      ]
+    },
+
+    {
+      "code": "G80",
+      "name": "Cancel Canned Cycle",
+      "description": "Cancel currently active canned cycle (drilling, tapping, boring). Return to normal motion mode.",
+      "modal_group": "motion",
+      "modal_behavior": {
+        "is_modal": true,
+        "description": "G80 cancels any active canned cycle and clears all sticky parameters",
+        "sticky_parameters": [],
+        "cancels_cycles": ["G81", "G82", "G83", "G84", "G85", "G86", "G87", "G88", "G89"]
+      },
+      "firmware": ["grbl", "mach3", "linuxcnc", "fanuc", "siemens", "haas"],
+      "parameters": [],
+      "constraints": [
+        {
+          "rule": "no_parameters",
+          "error": "G80 takes no parameters"
+        }
+      ],
+      "notes": "G80 cancels any active canned cycle (G81-G89). It is modal and stays in effect until another motion mode is selected. Often used at end of drilling sequences."
+    },
+
+    {
+      "code": "G81",
+      "name": "Drilling Cycle",
+      "description": "Simple drilling canned cycle. Rapid to position, drill to depth at feedrate, rapid retract.",
+      "modal_group": "motion",
+      "modal_behavior": {
+        "is_modal": true,
+        "description": "G81 stays active until cancelled with G80 or another motion mode. Subsequent lines with only XY coordinates will repeat the drilling cycle at new positions.",
+        "sticky_parameters": ["Z", "R", "F", "P", "Q", "L"],
+        "repeatable_parameters": ["X", "Y"],
+        "repeat_behavior": "After G81 is established with full parameters (Z, R, F), subsequent lines need only XY coordinates to repeat the cycle at new hole positions.",
+        "state_tracking": {
+          "initial_call": "Must have Z, R, F parameters",
+          "subsequent_calls": "Can have only X, Y (optional) to repeat cycle",
+          "parameter_updates": "Z, R can be updated in subsequent calls if needed"
+        }
+      },
+      "firmware": ["mach3", "linuxcnc", "fanuc", "siemens", "haas"],
+      "parameters": [
+        {
+          "name": "X",
+          "type": "float",
+          "unit": "mm or inches",
+          "description": "X coordinate of hole position",
+          "required": false,
+          "default": "current X position",
+          "modal_behavior": "Can be specified alone in subsequent lines to repeat cycle"
+        },
+        {
+          "name": "Y",
+          "type": "float",
+          "unit": "mm or inches",
+          "description": "Y coordinate of hole position",
+          "required": false,
+          "default": "current Y position",
+          "modal_behavior": "Can be specified alone in subsequent lines to repeat cycle"
+        },
+        {
+          "name": "Z",
+          "type": "float",
+          "unit": "mm or inches",
+          "description": "Final drilling depth (bottom of hole)",
+          "required": true,
+          "modal_behavior": "sticky",
+          "required_on_first_call": true,
+          "notes": "Required on first G81 call, then sticky for subsequent repeats"
+        },
+        {
+          "name": "R",
+          "type": "float",
+          "unit": "mm or inches",
+          "description": "Retract position (safety height above workpiece)",
+          "required": true,
+          "modal_behavior": "sticky",
+          "required_on_first_call": true,
+          "notes": "Tool rapids to this height, then feeds to Z depth"
+        },
+        {
+          "name": "F",
+          "type": "float",
+          "unit": "mm/min or inches/min",
+          "description": "Drilling feedrate",
+          "required": true,
+          "sticky": true,
+          "modal_behavior": "sticky",
+          "required_on_first_call": true,
+          "min_value": 0
+        },
+        {
+          "name": "L",
+          "type": "integer",
+          "description": "Number of repetitions (repeats the cycle at same XY)",
+          "required": false,
+          "default": 1,
+          "min_value": 1,
+          "modal_behavior": "sticky",
+          "notes": "L2 means drill twice at same location"
+        }
+      ],
+      "constraints": [
+        {
+          "rule": "all_required_on_first_call",
+          "params": ["Z", "R", "F"],
+          "error": "Z (depth), R (retract), and F (feedrate) are required on first G81 call",
+          "subsequent_calls": "Only XY coordinates needed for repeat cycles"
+        },
+        {
+          "rule": "valid_relationship",
+          "description": "R must be above Z",
+          "condition": "R > Z",
+          "error": "Retract position R must be higher than drilling depth Z"
+        },
+        {
+          "rule": "modal_repeat",
+          "description": "After initial G81 with full parameters, subsequent lines with only coordinates repeat the cycle",
+          "pattern": "G81 [full_params] -> X Y -> X Y -> ... -> G80"
+        }
+      ],
+      "operation_sequence": [
+        "Rapid move to XY position (if specified)",
+        "Rapid move to R position (retract/clearance plane)",
+        "Feed at F rate to Z depth",
+        "Rapid retract to initial Z (G98) or R position (G99)"
+      ],
+      "usage_examples": [
+        {
+          "description": "Complete cycle with multiple holes",
+          "code": "G81 G99 X10 Y10 Z-5.0 R1.0 F100 ; First hole with full parameters\nX20 Y10 ; Second hole - cycle repeats with same Z, R, F\nX30 Y10 ; Third hole - cycle repeats again\nG80 ; Cancel drilling cycle"
+        }
+      ],
+      "notes": "Modal command - stays active for subsequent XY coordinates until cancelled with G80 or another motion mode (G0/G1/G2/G3). This allows efficient programming of multiple holes without repeating Z, R, F parameters."
+    },
+
+    {
+      "code": "G82",
+      "name": "Drilling Cycle with Dwell",
+      "description": "Drilling cycle with dwell (pause) at bottom of hole. Same as G81 but adds dwell time.",
+      "modal_group": "motion",
+      "modal_behavior": {
+        "is_modal": true,
+        "description": "G82 stays active until cancelled. Subsequent lines with only XY repeat the cycle.",
+        "sticky_parameters": ["Z", "R", "F", "P", "L"],
+        "repeatable_parameters": ["X", "Y"],
+        "repeat_behavior": "After initial G82 with full parameters (Z, R, P, F), subsequent lines need only XY.",
+        "state_tracking": {
+          "initial_call": "Must have Z, R, P, F parameters",
+          "subsequent_calls": "Can have only X, Y to repeat cycle",
+          "parameter_updates": "Any sticky parameter can be updated if specified"
+        }
+      },
+      "firmware": ["mach3", "linuxcnc", "fanuc", "siemens", "haas"],
+      "parameters": [
+        {
+          "name": "X",
+          "type": "float",
+          "unit": "mm or inches",
+          "description": "X coordinate of hole position",
+          "required": false,
+          "default": "current X position",
+          "modal_behavior": "repeatable"
+        },
+        {
+          "name": "Y",
+          "type": "float",
+          "unit": "mm or inches",
+          "description": "Y coordinate of hole position",
+          "required": false,
+          "default": "current Y position",
+          "modal_behavior": "repeatable"
+        },
+        {
+          "name": "Z",
+          "type": "float",
+          "unit": "mm or inches",
+          "description": "Final drilling depth",
+          "required": true,
+          "modal_behavior": "sticky",
+          "required_on_first_call": true
+        },
+        {
+          "name": "R",
+          "type": "float",
+          "unit": "mm or inches",
+          "description": "Retract position (clearance plane)",
+          "required": true,
+          "modal_behavior": "sticky",
+          "required_on_first_call": true
+        },
+        {
+          "name": "P",
+          "type": "float",
+          "unit": "milliseconds or seconds",
+          "description": "Dwell time at bottom of hole",
+          "required": true,
+          "min_value": 0,
+          "modal_behavior": "sticky",
+          "required_on_first_call": true,
+          "notes": "Units vary by controller: milliseconds (most) or seconds"
+        },
+        {
+          "name": "F",
+          "type": "float",
+          "unit": "mm/min or inches/min",
+          "description": "Drilling feedrate",
+          "required": true,
+          "sticky": true,
+          "modal_behavior": "sticky",
+          "required_on_first_call": true
+        },
+        {
+          "name": "L",
+          "type": "integer",
+          "description": "Number of repetitions",
+          "required": false,
+          "default": 1,
+          "min_value": 1,
+          "modal_behavior": "sticky"
+        }
+      ],
+      "constraints": [
+        {
+          "rule": "all_required_on_first_call",
+          "params": ["Z", "R", "P", "F"],
+          "error": "Z, R, P (dwell), and F are required on first G82 call",
+          "subsequent_calls": "Only XY needed for repeats"
+        },
+        {
+          "rule": "valid_relationship",
+          "condition": "R > Z",
+          "error": "R must be above Z"
+        },
+        {
+          "rule": "modal_repeat",
+          "pattern": "G82 [full_params] -> X Y -> X Y -> G80"
+        }
+      ],
+      "operation_sequence": [
+        "Rapid to XY position",
+        "Rapid to R position",
+        "Feed to Z depth at F rate",
+        "Dwell for P time",
+        "Rapid retract to initial Z (G98) or R (G99)"
+      ],
+      "usage_examples": [
+        {
+          "description": "Spot drilling pattern with dwell",
+          "code": "G82 X10 Y10 Z-2 R1 P500 F150 ; First spot\nX20 Y10 ; Second spot\nX30 Y10 ; Third spot\nG80"
+        }
+      ],
+      "notes": "Used for spot facing, counterboring, or when chip breaking is needed. Dwell allows chips to clear. Modal - repeats for subsequent XY coordinates."
+    },
+
+    {
+      "code": "G83",
+      "name": "Peck Drilling Cycle",
+      "description": "Deep hole drilling with peck (intermittent) feed and chip evacuation retracts.",
+      "modal_group": "motion",
+      "modal_behavior": {
+        "is_modal": true,
+        "description": "G83 stays active until cancelled. Peck depth Q and other parameters remain sticky.",
+        "sticky_parameters": ["Z", "R", "F", "Q", "P", "L"],
+        "repeatable_parameters": ["X", "Y"],
+        "repeat_behavior": "After initial G83 with all parameters (Z, R, Q, F), subsequent XY repeats the peck cycle.",
+        "state_tracking": {
+          "initial_call": "Must have Z, R, Q, F parameters",
+          "subsequent_calls": "Only X, Y needed to repeat peck drilling",
+          "parameter_updates": "Q (peck depth) can be changed for different hole depths"
+        }
+      },
+      "firmware": ["mach3", "linuxcnc", "fanuc", "siemens", "haas"],
+      "parameters": [
+        {
+          "name": "X",
+          "type": "float",
+          "unit": "mm or inches",
+          "description": "X coordinate of hole position",
+          "required": false,
+          "modal_behavior": "repeatable"
+        },
+        {
+          "name": "Y",
+          "type": "float",
+          "unit": "mm or inches",
+          "description": "Y coordinate of hole position",
+          "required": false,
+          "modal_behavior": "repeatable"
+        },
+        {
+          "name": "Z",
+          "type": "float",
+          "unit": "mm or inches",
+          "description": "Final drilling depth",
+          "required": true,
+          "modal_behavior": "sticky",
+          "required_on_first_call": true
+        },
+        {
+          "name": "R",
+          "type": "float",
+          "unit": "mm or inches",
+          "description": "Retract/clearance plane",
+          "required": true,
+          "modal_behavior": "sticky",
+          "required_on_first_call": true
+        },
+        {
+          "name": "Q",
+          "type": "float",
+          "unit": "mm or inches",
+          "description": "Peck depth increment (depth per peck)",
+          "required": true,
+          "min_value": 0.001,
+          "modal_behavior": "sticky",
+          "required_on_first_call": true,
+          "notes": "Tool drills Q depth, then retracts for chip clearing"
+        },
+        {
+          "name": "F",
+          "type": "float",
+          "unit": "mm/min or inches/min",
+          "description": "Drilling feedrate",
+          "required": true,
+          "sticky": true,
+          "modal_behavior": "sticky",
+          "required_on_first_call": true
+        },
+        {
+          "name": "P",
+          "type": "float",
+          "unit": "milliseconds or seconds",
+          "description": "Dwell time at bottom of each peck",
+          "required": false,
+          "min_value": 0,
+          "modal_behavior": "sticky"
+        },
+        {
+          "name": "L",
+          "type": "integer",
+          "description": "Number of repetitions",
+          "required": false,
+          "default": 1,
+          "modal_behavior": "sticky"
+        }
+      ],
+      "constraints": [
+        {
+          "rule": "all_required_on_first_call",
+          "params": ["Z", "R", "Q", "F"],
+          "error": "Z, R, Q (peck depth), and F are required on first G83 call",
+          "subsequent_calls": "Only XY needed for repeats"
+        },
+        {
+          "rule": "valid_relationship",
+          "condition": "R > Z",
+          "error": "R must be above Z"
+        },
+        {
+          "rule": "positive",
+          "params": ["Q"],
+          "error": "Q peck depth must be positive"
+        },
+        {
+          "rule": "modal_repeat",
+          "pattern": "G83 [full_params] -> X Y -> X Y -> G80"
+        }
+      ],
+      "operation_sequence": [
+        "Rapid to XY position",
+        "Rapid to R position",
+        "Feed Q depth at F rate",
+        "Rapid retract to R for chip clearing",
+        "Rapid back down to previous depth minus small delta",
+        "Repeat steps 3-5 until full Z depth reached",
+        "Final retract to initial Z (G98) or R (G99)"
+      ],
+      "usage_examples": [
+        {
+          "description": "Deep hole drilling pattern",
+          "code": "G83 X10 Y10 Z-20 R2 Q2 F100 ; First deep hole, 2mm pecks\nX20 Y10 ; Second hole with same parameters\nX30 Y10 ; Third hole\nG80"
+        }
+      ],
+      "notes": "Essential for deep holes (>4x diameter). Prevents chip packing and tool breakage. Each peck fully retracts to R plane for chip evacuation. Modal command."
+    },
+
+    {
+      "code": "G84",
+      "name": "Right-Hand Tapping Cycle",
+      "description": "Rigid tapping cycle for right-hand threads. Synchronizes spindle RPM with Z feedrate.",
+      "modal_group": "motion",
+      "modal_behavior": {
+        "is_modal": true,
+        "description": "G84 stays active for tapping multiple holes. Feedrate F must match thread pitch.",
+        "sticky_parameters": ["Z", "R", "F", "L"],
+        "repeatable_parameters": ["X", "Y"],
+        "repeat_behavior": "After G84 setup, subsequent XY positions repeat tapping cycle.",
+        "special_requirements": ["spindle_must_be_running", "feedrate_must_match_pitch"],
+        "state_tracking": {
+          "initial_call": "Must have Z, R, F and spindle running (M3)",
+          "subsequent_calls": "Only X, Y to tap at new positions",
+          "spindle_sync": "F must equal thread_pitch × RPM"
+        }
+      },
+      "firmware": ["mach3", "linuxcnc", "fanuc", "siemens", "haas"],
+      "parameters": [
+        {
+          "name": "X",
+          "type": "float",
+          "unit": "mm or inches",
+          "description": "X coordinate of tap position",
+          "required": false,
+          "modal_behavior": "repeatable"
+        },
+        {
+          "name": "Y",
+          "type": "float",
+          "unit": "mm or inches",
+          "description": "Y coordinate of tap position",
+          "required": false,
+          "modal_behavior": "repeatable"
+        },
+        {
+          "name": "Z",
+          "type": "float",
+          "unit": "mm or inches",
+          "description": "Final tap depth",
+          "required": true,
+          "modal_behavior": "sticky",
+          "required_on_first_call": true
+        },
+        {
+          "name": "R",
+          "type": "float",
+          "unit": "mm or inches",
+          "description": "Retract position",
+          "required": true,
+          "modal_behavior": "sticky",
+          "required_on_first_call": true
+        },
+        {
+          "name": "F",
+          "type": "float",
+          "unit": "mm/min or inches/min",
+          "description": "Tapping feedrate (must match thread pitch × RPM)",
+          "required": true,
+          "modal_behavior": "sticky",
+          "required_on_first_call": true,
+          "notes": "F = Thread_Pitch × RPM. Critical for rigid tapping."
+        },
+        {
+          "name": "L",
+          "type": "integer",
+          "description": "Number of repetitions",
+          "required": false,
+          "default": 1,
+          "modal_behavior": "sticky"
+        }
+      ],
+      "constraints": [
+        {
+          "rule": "all_required_on_first_call",
+          "params": ["Z", "R", "F"],
+          "error": "Z, R, and F are required on first G84 call",
+          "subsequent_calls": "Only XY needed"
+        },
+        {
+          "rule": "spindle_must_be_on",
+          "error": "Spindle must be running (M3) before G84"
+        },
+        {
+          "rule": "feedrate_matches_pitch",
+          "formula": "F = pitch × S",
+          "error": "Feedrate F must match thread pitch times spindle speed S"
+        },
+        {
+          "rule": "modal_repeat",
+          "pattern": "M3 S1000 -> G84 [full_params] -> X Y -> X Y -> G80"
+        }
+      ],
+      "operation_sequence": [
+        "Rapid to XY position",
+        "Rapid to R position",
+        "Feed to Z depth (synchronized with spindle)",
+        "Stop spindle, reverse direction (M4)",
+        "Feed back to R position",
+        "Stop spindle"
+      ],
+      "usage_examples": [
+        {
+          "description": "M6 thread tapping pattern",
+          "code": "M3 S500 ; 500 RPM\nG84 X10 Y10 Z-15 R2 F500 ; F = 1.0mm pitch × 500 RPM\nX20 Y10 ; Tap second hole\nX30 Y10 ; Tap third hole\nG80\nM5"
+        }
+      ],
+      "warnings": [
+        "Feedrate F must precisely match thread pitch × spindle RPM",
+        "Requires rigid tapping capability (spindle encoder feedback)",
+        "Wrong feedrate will strip threads or break tap"
+      ],
+      "notes": "Modal command for tapping multiple holes. All holes must use same thread pitch since F is sticky."
+    },
+
+    {
+      "code": "G85",
+      "name": "Boring Cycle",
+      "description": "Boring cycle. Feed in, feed out at same rate (no rapid retract).",
+      "modal_group": "motion",
+      "modal_behavior": {
+        "is_modal": true,
+        "description": "G85 stays active for multiple boring operations. Feed out prevents tool marks.",
+        "sticky_parameters": ["Z", "R", "F", "L"],
+        "repeatable_parameters": ["X", "Y"],
+        "repeat_behavior": "After G85 setup, subsequent XY repeat boring cycle.",
+        "state_tracking": {
+          "initial_call": "Must have Z, R, F",
+          "subsequent_calls": "Only X, Y to bore at new positions"
+        }
+      },
+      "firmware": ["mach3", "linuxcnc", "fanuc", "siemens", "haas"],
+      "parameters": [
+        {
+          "name": "X",
+          "type": "float",
+          "description": "X coordinate",
+          "required": false,
+          "modal_behavior": "repeatable"
+        },
+        {
+          "name": "Y",
+          "type": "float",
+          "description": "Y coordinate",
+          "required": false,
+          "modal_behavior": "repeatable"
+        },
+        {
+          "name": "Z",
+          "type": "float",
+          "description": "Final boring depth",
+          "required": true,
+          "modal_behavior": "sticky",
+          "required_on_first_call": true
+        },
+        {
+          "name": "R",
+          "type": "float",
+          "description": "Retract position",
+          "required": true,
+          "modal_behavior": "sticky",
+          "required_on_first_call": true
+        },
+        {
+          "name": "F",
+          "type": "float",
+          "description": "Feedrate for both feed in and feed out",
+          "required": true,
+          "modal_behavior": "sticky",
+          "required_on_first_call": true
+        },
+        {
+          "name": "L",
+          "type": "integer",
+          "description": "Repetitions",
+          "required": false,
+          "default": 1,
+          "modal_behavior": "sticky"
+        }
+      ],
+      "constraints": [
+        {
+          "rule": "all_required_on_first_call",
+          "params": ["Z", "R", "F"],
+          "error": "Z, R, F required on first call",
+          "subsequent_calls": "Only XY needed"
+        },
+        {
+          "rule": "modal_repeat",
+          "pattern": "G85 [full_params] -> X Y -> X Y -> G80"
+        }
+      ],
+      "operation_sequence": [
+        "Rapid to XY",
+        "Rapid to R",
+        "Feed to Z at F rate",
+        "Feed back to R at F rate (no rapid)"
+      ],
+      "usage_examples": [
+        {
+          "description": "Precision boring pattern",
+          "code": "G85 X10 Y10 Z-10 R2 F80 ; First bore\nX20 Y10 ; Second bore\nG80"
+        }
+      ],
+      "notes": "Used for accurate boring. Feed out prevents tool marks that rapid retract would cause. Modal command."
+    },
+
+    {
+      "code": "G86",
+      "name": "Boring Cycle with Spindle Stop",
+      "description": "Boring cycle with spindle stop and rapid retract. Prevents tool marks.",
+      "modal_group": "motion",
+      "modal_behavior": {
+        "is_modal": true,
+        "description": "G86 remains active for multiple bores. Spindle stops before retract.",
+        "sticky_parameters": ["Z", "R", "F", "P", "L"],
+        "repeatable_parameters": ["X", "Y"],
+        "repeat_behavior": "Subsequent XY positions repeat G86 cycle with spindle stop/start.",
+        "state_tracking": {
+          "initial_call": "Must have Z, R, F and spindle running",
+          "subsequent_calls": "Only X, Y to bore at new positions",
+          "spindle_control": "Automatically stops and restarts spindle each cycle"
+        }
+      },
+      "firmware": ["mach3", "linuxcnc", "fanuc", "siemens", "haas"],
+      "parameters": [
+        {
+          "name": "X",
+          "type": "float",
+          "description": "X coordinate",
+          "required": false,
+          "modal_behavior": "repeatable"
+        },
+        {
+          "name": "Y",
+          "type": "float",
+          "description": "Y coordinate",
+          "required": false,
+          "modal_behavior": "repeatable"
+        },
+        {
+          "name": "Z",
+          "type": "float",
+          "description": "Final boring depth",
+          "required": true,
+          "modal_behavior": "sticky",
+          "required_on_first_call": true
+        },
+        {
+          "name": "R",
+          "type": "float",
+          "description": "Retract position",
+          "required": true,
+          "modal_behavior": "sticky",
+          "required_on_first_call": true
+        },
+        {
+          "name": "F",
+          "type": "float",
+          "description": "Feedrate",
+          "required": true,
+          "modal_behavior": "sticky",
+          "required_on_first_call": true
+        },
+        {
+          "name": "P",
+          "type": "float",
+          "description": "Dwell time at bottom (milliseconds)",
+          "required": false,
+          "default": 0,
+          "modal_behavior": "sticky"
+        },
+        {
+          "name": "L",
+          "type": "integer",
+          "description": "Repetitions",
+          "required": false,
+          "default": 1,
+          "modal_behavior": "sticky"
+        }
+      ],
+      "constraints": [
+        {
+          "rule": "all_required_on_first_call",
+          "params": ["Z", "R", "F"],
+          "error": "Z, R, F required on first call",
+          "subsequent_calls": "Only XY needed"
+        },
+        {
+          "rule": "spindle_must_be_on",
+          "error": "Spindle must be running before G86"
+        },
+        {
+          "rule": "modal_repeat",
+          "pattern": "M3 -> G86 [full_params] -> X Y -> X Y -> G80 -> M5"
+        }
+      ],
+      "operation_sequence": [
+        "Rapid to XY",
+        "Rapid to R",
+        "Feed to Z",
+        "Optional dwell P",
+        "Stop spindle (M5)",
+        "Rapid retract to R or initial Z",
+        "Restart spindle (M3)"
+      ],
+      "usage_examples": [
+        {
+          "description": "Boring with spindle stop",
+          "code": "M3 S1200\nG86 X10 Y10 Z-12 R2 P200 F100\nX20 Y10\nG80\nM5"
+        }
+      ],
+      "notes": "Modal command. Spindle automatically stops/starts for each hole to prevent tool marks during retract."
+    },
+
+    {
+      "code": "G87",
+      "name": "Back Boring Cycle",
+      "description": "Back boring cycle for boring from back side of workpiece.",
+      "modal_group": "motion",
+      "modal_behavior": {
+        "is_modal": true,
+        "description": "G87 stays active but rarely used. Complex cycle implementation varies.",
+        "sticky_parameters": ["Z", "R", "F", "I", "L"],
+        "repeatable_parameters": ["X", "Y"],
+        "repeat_behavior": "Subsequent XY repeat back boring cycle.",
+        "state_tracking": {
+          "initial_call": "Must have Z, R, F, I parameters",
+          "subsequent_calls": "Only X, Y to repeat",
+          "implementation_note": "Behavior varies significantly between controllers"
+        }
+      },
+      "firmware": ["mach3", "linuxcnc", "fanuc", "siemens", "haas"],
+      "parameters": [
+        {
+          "name": "X",
+          "type": "float",
+          "description": "X coordinate",
+          "required": false,
+          "modal_behavior": "repeatable"
+        },
+        {
+          "name": "Y",
+          "type": "float",
+          "description": "Y coordinate",
+          "required": false,
+          "modal_behavior": "repeatable"
+        },
+        {
+          "name": "Z",
+          "type": "float",
+          "description": "Final depth",
+          "required": true,
+          "modal_behavior": "sticky",
+          "required_on_first_call": true
+        },
+        {
+          "name": "R",
+          "type": "float",
+          "description": "Retract position",
+          "required": true,
+          "modal_behavior": "sticky",
+          "required_on_first_call": true
+        },
+        {
+          "name": "F",
+          "type": "float",
+          "description": "Feedrate",
+          "required": true,
+          "modal_behavior": "sticky",
+          "required_on_first_call": true
+        },
+        {
+          "name": "I",
+          "type": "float",
+          "description": "Shift distance for back boring",
+          "required": true,
+          "modal_behavior": "sticky",
+          "required_on_first_call": true
+        },
+        {
+          "name": "L",
+          "type": "integer",
+          "description": "Repetitions",
+          "required": false,
+          "default": 1,
+          "modal_behavior": "sticky"
+        }
+      ],
+      "constraints": [
+        {
+          "rule": "all_required_on_first_call",
+          "params": ["Z", "R", "F", "I"],
+          "error": "Z, R, F, I required on first G87 call",
+          "subsequent_calls": "Only XY needed"
+        },
+        {
+          "rule": "modal_repeat",
+          "pattern": "G87 [full_params] -> X Y -> X Y -> G80"
+        }
+      ],
+      "notes": "Complex cycle for special boring operations. Implementation varies significantly between controllers. Modal command but rarely used in practice."
+    },
+
+    {
+      "code": "G88",
+      "name": "Boring Cycle with Manual Retract",
+      "description": "Boring cycle with spindle stop and manual retract (dwell for operator).",
+      "modal_group": "motion",
+      "modal_behavior": {
+        "is_modal": true,
+        "description": "G88 stays active but requires operator intervention each cycle.",
+        "sticky_parameters": ["Z", "R", "F", "P", "L"],
+        "repeatable_parameters": ["X", "Y"],
+        "repeat_behavior": "Each XY position pauses for manual retract.",
+        "special_requirements": ["operator_intervention"],
+        "state_tracking": {
+          "initial_call": "Must have Z, R, F",
+          "subsequent_calls": "Only X, Y but requires manual action each time",
+          "operator_action": "Operator must manually retract after each bore"
+        }
+      },
+      "firmware": ["mach3", "linuxcnc", "fanuc", "siemens", "haas"],
+      "parameters": [
+        {
+          "name": "X",
+          "type": "float",
+          "description": "X coordinate",
+          "required": false,
+          "modal_behavior": "repeatable"
+        },
+        {
+          "name": "Y",
+          "type": "float",
+          "description": "Y coordinate",
+          "required": false,
+          "modal_behavior": "repeatable"
+        },
+        {
+          "name": "Z",
+          "type": "float",
+          "description": "Final boring depth",
+          "required": true,
+          "modal_behavior": "sticky",
+          "required_on_first_call": true
+        },
+        {
+          "name": "R",
+          "type": "float",
+          "description": "Retract position",
+          "required": true,
+          "modal_behavior": "sticky",
+          "required_on_first_call": true
+        },
+        {
+          "name": "F",
+          "type": "float",
+          "description": "Feedrate",
+          "required": true,
+          "modal_behavior": "sticky",
+          "required_on_first_call": true
+        },
+        {
+          "name": "P",
+          "type": "float",
+          "description": "Dwell time at bottom",
+          "required": false,
+          "modal_behavior": "sticky"
+        },
+        {
+          "name": "L",
+          "type": "integer",
+          "description": "Repetitions",
+          "required": false,
+          "default": 1,
+          "modal_behavior": "sticky"
+        }
+      ],
+      "constraints": [
+        {
+          "rule": "all_required_on_first_call",
+          "params": ["Z", "R", "F"],
+          "error": "Z, R, F required on first call",
+          "subsequent_calls": "Only XY needed but manual retract required each time"
+        },
+        {
+          "rule": "modal_repeat",
+          "pattern": "G88 [full_params] -> X Y (manual) -> X Y (manual) -> G80"
+        }
+      ],
+      "operation_sequence": [
+        "Rapid to XY",
+        "Rapid to R",
+        "Feed to Z",
+        "Stop spindle",
+        "Dwell (wait for manual retract or operator action)",
+        "Manual retract by operator"
+      ],
+      "notes": "Rarely used. Requires operator intervention during cycle. Modal but impractical for multiple holes."
+    },
+
+    {
+      "code": "G89",
+      "name": "Boring Cycle with Dwell",
+      "description": "Boring cycle with dwell at bottom, then feed retract.",
+      "modal_group": "motion",
+      "modal_behavior": {
+        "is_modal": true,
+        "description": "G89 stays active for precision boring multiple holes. Dwell improves finish.",
+        "sticky_parameters": ["Z", "R", "F", "P", "L"],
+        "repeatable_parameters": ["X", "Y"],
+        "repeat_behavior": "After G89 setup with P dwell, subsequent XY repeat cycle.",
+        "state_tracking": {
+          "initial_call": "Must have Z, R, P, F parameters",
+          "subsequent_calls": "Only X, Y to bore at new positions"
+        }
+      },
+      "firmware": ["mach3", "linuxcnc", "fanuc", "siemens", "haas"],
+      "parameters": [
+        {
+          "name": "X",
+          "type": "float",
+          "description": "X coordinate",
+          "required": false,
+          "modal_behavior": "repeatable"
+        },
+        {
+          "name": "Y",
+          "type": "float",
+          "description": "Y coordinate",
+          "required": false,
+          "modal_behavior": "repeatable"
+        },
+        {
+          "name": "Z",
+          "type": "float",
+          "description": "Final boring depth",
+          "required": true,
+          "modal_behavior": "sticky",
+          "required_on_first_call": true
+        },
+        {
+          "name": "R",
+          "type": "float",
+          "description": "Retract position",
+          "required": true,
+          "modal_behavior": "sticky",
+          "required_on_first_call": true
+        },
+        {
+          "name": "P",
+          "type": "float",
+          "unit": "milliseconds or seconds",
+          "description": "Dwell time at bottom of hole",
+          "required": true,
+          "min_value": 0,
+          "modal_behavior": "sticky",
+          "required_on_first_call": true
+        },
+        {
+          "name": "F",
+          "type": "float",
+          "description": "Feedrate for feed in and feed out",
+          "required": true,
+          "modal_behavior": "sticky",
+          "required_on_first_call": true
+        },
+        {
+          "name": "L",
+          "type": "integer",
+          "description": "Repetitions",
+          "required": false,
+          "default": 1,
+          "modal_behavior": "sticky"
+        }
+      ],
+      "constraints": [
+        {
+          "rule": "all_required_on_first_call",
+          "params": ["Z", "R", "P", "F"],
+          "error": "Z, R, P (dwell), F required on first G89 call",
+          "subsequent_calls": "Only XY needed"
+        },
+        {
+          "rule": "modal_repeat",
+          "pattern": "G89 [full_params] -> X Y -> X Y -> G80"
+        }
+      ],
+      "operation_sequence": [
+        "Rapid to XY",
+        "Rapid to R",
+        "Feed to Z at F rate",
+        "Dwell for P time",
+        "Feed retract to R at F rate"
+      ],
+      "usage_examples": [
+        {
+          "description": "Precision boring with dwell",
+          "code": "G89 X10 Y10 Z-15 R2 P1000 F60 ; First bore, 1 sec dwell\nX20 Y10 ; Second bore\nX30 Y10 ; Third bore\nG80"
+        }
+      ],
+      "notes": "Similar to G85 but adds dwell. Used for precision boring with good surface finish. Modal command - repeats for multiple holes."
+    },
+    
+    {
+      "code": "G90",
+      "name": "Absolute Positioning",
+      "description": "Set to absolute coordinate mode (default on most systems)",
+      "modal_group": "distance_mode",
+      "firmware": ["marlin", "reprapfirmware", "klipper", "grbl", "smoothieware", "mach3", "linuxcnc", "fanuc", "siemens", "haas"],
+      "parameters": [],
+      "constraints": [
+        {
+          "rule": "no_parameters",
+          "error": "G90 takes no parameters"
+        }
+      ],
+      "notes": "All coordinates are absolute from work zero. This is the default mode."
+    },
+
+    {
+      "code": "G90.1",
+      "name": "Arc Distance Mode - Absolute IJK",
+      "description": "Set arc center offsets (I, J, K) to absolute distance mode instead of default incremental.",
+      "modal_group": "arc_distance_mode",
+      "firmware": ["linuxcnc", "mach3", "grbl"],
+      "parameters": [],
+      "constraints": [
+        {
+          "rule": "no_parameters",
+          "error": "G90.1 takes no parameters"
+        }
+      ],
+      "notes": "When G90.1 is active, I and J values in G2/G3 are interpreted as absolute positions of arc center in current coordinate system, not as offsets from current position. Default mode is G91.1 (incremental). This is INDEPENDENT of G90/G91 setting.",
+      "usage_example": "G90.1 G2 X10 Y10 I5 J5 ; Arc with center at absolute position (5,5)",
+      "warnings": [
+        "Not supported by all controllers",
+        "When G90.1 active, BOTH I and J (or I and K, or J and K depending on plane) must be specified for G2/G3"
+      ]
+    },
+
+    {
+      "code": "G91",
+      "name": "Relative Positioning",
+      "description": "Set to relative/incremental coordinate mode",
+      "modal_group": "distance_mode",
+      "firmware": ["marlin", "reprapfirmware", "klipper", "grbl", "smoothieware", "mach3", "linuxcnc", "fanuc", "siemens", "haas"],
+      "parameters": [],
+      "constraints": [
+        {
+          "rule": "no_parameters",
+          "error": "G91 takes no parameters"
+        }
+      ],
+      "notes": "All coordinates are relative to current position"
+    },
+
+    {
+      "code": "G91.1",
+      "name": "Arc Distance Mode - Incremental IJK",
+      "description": "Set arc center offsets (I, J, K) to incremental distance mode (default behavior).",
+      "modal_group": "arc_distance_mode",
+      "firmware": ["linuxcnc", "mach3", "grbl"],
+      "parameters": [],
+      "constraints": [
+        {
+          "rule": "no_parameters",
+          "error": "G91.1 takes no parameters"
+        }
+      ],
+      "notes": "Default mode. When G91.1 is active (default), I, J, K values in G2/G3 are offsets from current position to arc center. This is INDEPENDENT of G90/G91 setting. G91.1 returns to default behavior after G90.1.",
+      "usage_example": "G91.1 G2 X10 Y10 I5 J0 ; Arc with center 5mm in +X direction from current position"
+    },
+    
+    {
+      "code": "G92",
+      "name": "Set Position",
+      "description": "Set current position to specified coordinates without moving",
+      "modal_group": "non_modal",
+      "firmware": ["marlin", "reprapfirmware", "klipper", "grbl", "smoothieware", "mach3", "linuxcnc", "fanuc", "siemens", "haas"],
+      "parameters": [
+        {
+          "name": "X",
+          "type": "float",
+          "description": "New X coordinate for current position",
+          "required": false
+        },
+        {
+          "name": "Y",
+          "type": "float",
+          "description": "New Y coordinate for current position",
+          "required": false
+        },
+        {
+          "name": "Z",
+          "type": "float",
+          "description": "New Z coordinate for current position",
+          "required": false
+        },
+        {
+          "name": "E",
+          "type": "float",
+          "description": "New E coordinate (3D printers)",
+          "required": false,
+          "firmware_specific": ["marlin", "reprapfirmware", "klipper", "smoothieware"]
+        }
+      ],
+      "constraints": [
+        {
+          "rule": "at_least_one",
+          "params": ["X", "Y", "Z", "E", "A", "B", "C"],
+          "error": "At least one axis must be specified"
+        }
+      ],
+      "warnings": [
+        "Using G92 can cause confusion. Prefer G54-G59 work coordinate systems on CNC.",
+        "Common use: G92 E0 to reset extruder position on 3D printers"
+      ]
+    },
+
+    {
+      "code": "G94",
+      "name": "Feed Per Minute",
+      "description": "Set feed rate to units per minute.",
+      "modal_group": "feed_rate_mode",
+      "firmware": ["marlin", "reprapfirmware", "klipper", "grbl", "smoothieware", "mach3", "linuxcnc", "fanuc", "siemens", "haas"],
+      "parameters": [],
+      "constraints": [
+        {
+          "rule": "no_parameters",
+          "error": "G94 takes no parameters"
+        }
+      ],
+      "notes": "G94 is a modal command. It remains active until G95 (feed per revolution) or G93 (inverse time mode) is called."
+    },
+    {
+      "code": "G95",
+      "name": "Feed Per Revolution",
+      "description": "Set feed rate to units per revolution.",
+      "modal_group": "feed_rate_mode",
+      "firmware": ["marlin", "reprapfirmware", "klipper", "grbl", "smoothieware", "mach3", "linuxcnc", "fanuc", "siemens", "haas"],
+      "parameters": [],
+      "constraints": [
+        {
+          "rule": "no_parameters",
+          "error": "G95 takes no parameters"
+        }
+      ],
+      "notes": "G95 is a modal command. It remains active until G94 (feed per minute) or G93 (inverse time mode) is called. Primarily used on lathes."
+    },
+    
+    {
+      "code": "M0",
+      "name": "Program Stop",
+      "description": "Unconditional program stop. Wait for user to resume.",
+      "modal_group": "non_modal",
+      "firmware": ["marlin", "reprapfirmware", "klipper", "grbl", "smoothieware", "mach3", "linuxcnc", "fanuc", "siemens", "haas"],
+      "parameters": [
+        {
+          "name": "S",
+          "type": "float",
+          "description": "Time to wait in seconds before continuing (Marlin)",
+          "required": false,
+          "firmware_specific": ["marlin"]
+        }
+      ]
+    },
+    
+    {
+      "code": "M3",
+      "name": "Spindle/Laser ON CW",
+      "description": "Turn on spindle clockwise or laser in constant power mode",
+      "modal_group": "spindle",
+      "firmware": ["marlin", "reprapfirmware", "grbl", "smoothieware", "mach3", "linuxcnc", "fanuc", "siemens", "haas"],
+      "parameters": [
+        {
+          "name": "S",
+          "type": "float",
+          "description": "Spindle speed (RPM) or laser power (0-255 or %)",
+          "required": false,
+          "min_value": 0,
+          "default": "previous S value or 0"
+        },
+        {
+          "name": "P",
+          "type": "integer",
+          "description": "Spindle/laser index (for multiple spindles)",
+          "required": false,
+          "firmware_specific": ["reprapfirmware", "linuxcnc"],
+          "default": 0
+        }
+      ],
+      "constraints": [
+        {
+          "rule": "positive_speed",
+          "params": ["S"],
+          "error": "Spindle speed S must be positive or zero"
+        }
+      ]
+    },
+    
+    {
+      "code": "M4",
+      "name": "Spindle ON CCW / Laser Dynamic",
+      "description": "Turn on spindle counter-clockwise or laser in dynamic power mode",
+      "modal_group": "spindle",
+      "firmware": ["marlin", "reprapfirmware", "grbl", "smoothieware", "mach3", "linuxcnc", "fanuc", "siemens", "haas"],
+      "parameters": [
+        {
+          "name": "S",
+          "type": "float",
+          "description": "Spindle speed (RPM) or laser power",
+          "required": false,
+          "min_value": 0
+        }
+      ],
+      "notes": {
+        "grbl": "In laser mode, M4 enables dynamic power scaling based on feedrate"
+      }
+    },
+    
+    {
+      "code": "M5",
+      "name": "Spindle/Laser OFF",
+      "description": "Turn off spindle or laser",
+      "modal_group": "spindle",
+      "firmware": ["marlin", "reprapfirmware", "grbl", "smoothieware", "mach3", "linuxcnc", "fanuc", "siemens", "haas"],
+      "parameters": [],
+      "constraints": [
+        {
+          "rule": "no_parameters",
+          "error": "M5 takes no parameters"
+        }
+      ]
+    },
+    
+    {
+      "code": "M104",
+      "name": "Set Hotend Temperature",
+      "description": "Set extruder target temperature (non-blocking)",
+      "modal_group": "non_modal",
+      "firmware": ["marlin", "reprapfirmware", "klipper", "smoothieware"],
+      "parameters": [
+        {
+          "name": "S",
+          "type": "float",
+          "unit": "celsius",
+          "description": "Target temperature",
+          "required": true,
+          "min_value": 0,
+          "max_value": 500
+        },
+        {
+          "name": "T",
+          "type": "integer",
+          "description": "Tool/extruder number",
+          "required": false,
+          "default": 0,
+          "min_value": 0
+        }
+      ],
+      "constraints": [
+        {
+          "rule": "require",
+          "params": ["S"],
+          "error": "Temperature S parameter required"
+        },
+        {
+          "rule": "valid_range",
+          "param": "S",
+          "min": 0,
+          "max": 500,
+          "error": "Temperature must be between 0 and 500°C"
+        }
+      ]
+    },
+    
+    {
+      "code": "M105",
+      "name": "Report Temperatures",
+      "description": "Get current and target temperatures of all heaters",
+      "modal_group": "non_modal",
+      "firmware": ["marlin", "reprapfirmware", "klipper", "smoothieware"],
+      "parameters": [],
+      "constraints": [
+        {
+          "rule": "no_parameters",
+          "error": "M105 takes no parameters"
+        }
+      ]
+    },
+    
+    {
+      "code": "M106",
+      "name": "Set Fan Speed",
+      "description": "Turn on fan at specified speed",
+      "modal_group": "non_modal",
+      "firmware": ["marlin", "reprapfirmware", "klipper", "smoothieware"],
+      "parameters": [
+        {
+          "name": "S",
+          "type": "float",
+          "description": "Fan speed (0-255 for 8-bit, 0.0-1.0 for RRF)",
+          "required": false,
+          "min_value": 0,
+          "default": 255
+        },
+        {
+          "name": "P",
+          "type": "integer",
+          "description": "Fan number",
+          "required": false,
+          "default": 0,
+          "min_value": 0
+        }
+      ],
+      "firmware_variations": [
+        {
+          "firmware": ["marlin", "klipper", "smoothieware"],
+          "parameter_override": {
+            "S": {
+              "max_value": 255,
+              "description": "Fan speed 0-255 (8-bit PWM)"
+            }
+          }
+        },
+        {
+          "firmware": ["reprapfirmware"],
+          "parameter_override": {
+            "S": {
+              "max_value": 1.0,
+              "description": "Fan speed 0.0-1.0 (0-100%)"
+            }
+          }
+        }
+      ]
+    },
+    
+    {
+      "code": "M107",
+      "name": "Fan Off",
+      "description": "Turn off fan",
+      "modal_group": "non_modal",
+      "firmware": ["marlin", "reprapfirmware", "klipper", "smoothieware"],
+      "parameters": [
+        {
+          "name": "P",
+          "type": "integer",
+          "description": "Fan number",
+          "required": false,
+          "default": 0
+        }
+      ]
+    },
+    
+    {
+      "code": "M109",
+      "name": "Set Hotend Temperature and Wait",
+      "description": "Set extruder target temperature and wait until reached (blocking)",
+      "modal_group": "non_modal",
+      "firmware": ["marlin", "reprapfirmware", "klipper", "smoothieware"],
+      "parameters": [
+        {
+          "name": "S",
+          "type": "float",
+          "unit": "celsius",
+          "description": "Target temperature to wait for",
+          "required": false
+        },
+        {
+          "name": "R",
+          "type": "float",
+          "unit": "celsius",
+          "description": "Target temperature (wait for heating OR cooling)",
+          "required": false,
+          "firmware_specific": ["marlin", "reprapfirmware"]
+        },
+        {
+          "name": "T",
+          "type": "integer",
+          "description": "Tool/extruder number",
+          "required": false,
+          "default": 0
+        }
+      ],
+      "constraints": [
+        {
+          "rule": "require_one",
+          "params": ["S", "R"],
+          "error": "Must specify either S or R temperature"
+        }
+      ],
+      "notes": {
+        "marlin": "S waits only for heating up. R waits for heating or cooling."
+      }
+    },
+    
+    {
+      "code": "M140",
+      "name": "Set Bed Temperature",
+      "description": "Set heated bed target temperature (non-blocking)",
+      "modal_group": "non_modal",
+      "firmware": ["marlin", "reprapfirmware", "klipper", "smoothieware"],
+      "parameters": [
+        {
+          "name": "S",
+          "type": "float",
+          "unit": "celsius",
+          "description": "Target bed temperature",
+          "required": true,
+          "min_value": 0,
+          "max_value": 200
+        }
+      ],
+      "constraints": [
+        {
+          "rule": "require",
+          "params": ["S"],
+          "error": "Temperature S required"
+        }
+      ]
+    },
+    
+    {
+      "code": "M190",
+      "name": "Set Bed Temperature and Wait",
+      "description": "Set bed target temperature and wait until reached (blocking)",
+      "modal_group": "non_modal",
+      "firmware": ["marlin", "reprapfirmware", "klipper", "smoothieware"],
+      "parameters": [
+        {
+          "name": "S",
+          "type": "float",
+          "unit": "celsius",
+          "description": "Target temperature to wait for",
+          "required": false
+        },
+        {
+          "name": "R",
+          "type": "float",
+          "unit": "celsius",
+          "description": "Target temperature (wait for heating OR cooling)",
+          "required": false
+        }
+      ],
+      "constraints": [
+        {
+          "rule": "require_one",
+          "params": ["S", "R"],
+          "error": "Must specify either S or R temperature"
+        }
+      ]
+    },
+    
+    {
+      "code": "M220",
+      "name": "Set Feedrate Percentage",
+      "description": "Set feedrate multiplier (speed override)",
+      "modal_group": "non_modal",
+      "firmware": ["marlin", "reprapfirmware", "klipper", "smoothieware"],
+      "parameters": [
+        {
+          "name": "S",
+          "type": "float",
+          "unit": "percent",
+          "description": "Feedrate percentage (100 = default, 50 = half speed)",
+          "required": true,
+          "min_value": 1,
+          "max_value": 999,
+          "default": 100
+        }
+      ],
+      "constraints": [
+        {
+          "rule": "require",
+          "params": ["S"],
+          "error": "Percentage S required"
+        },
+        {
+          "rule": "positive",
+          "params": ["S"],
+          "error": "Feedrate percentage must be positive"
+        }
+      ]
+    },
+    
+    {
+      "code": "M221",
+      "name": "Set Flow Percentage",
+      "description": "Set extrusion flow multiplier (extrusion override)",
+      "modal_group": "non_modal",
+      "firmware": ["marlin", "reprapfirmware", "klipper", "smoothieware"],
+      "parameters": [
+        {
+          "name": "S",
+          "type": "float",
+          "unit": "percent",
+          "description": "Flow percentage (100 = default, 110 = 10% over-extrusion)",
+          "required": true,
+          "min_value": 1,
+          "max_value": 999,
+          "default": 100
+        },
+        {
+          "name": "T",
+          "type": "integer",
+          "description": "Extruder number",
+          "required": false,
+          "default": 0
+        }
+      ],
+      "constraints": [
+        {
+          "rule": "require",
+          "params": ["S"],
+          "error": "Percentage S required"
+        }
+      ]
+    }
+  ],
+  
+  "constraint_rules": {
+    "all_required_on_first_call": {
+      "description": "Specified parameters must be present on first call of modal canned cycle, then become sticky for subsequent calls",
+      "applies_to": ["G81", "G82", "G83", "G84", "G85", "G86", "G87", "G88", "G89"]
+    },
+    "modal_repeat": {
+      "description": "Modal canned cycle repeats operation with sticky parameters when only position coordinates are given",
+      "applies_to": ["G81", "G82", "G83", "G84", "G85", "G86", "G87", "G88", "G89"]
+    },
+    "feedrate_matches_pitch": {
+      "description": "For tapping cycles, feedrate must equal thread pitch times spindle RPM",
+      "applies_to": ["G84"],
+      "formula": "F = pitch × S"
+    },
+    "spindle_must_be_on": {
+      "description": "Spindle must be running before this command executes"
+    },
+    "valid_relationship": {
+      "description": "Mathematical relationship between parameters must be valid"
+    },
+    "require": {
+      "description": "Specified parameters must be present"
+    },
+    "require_one": {
+      "description": "At least one of specified parameters must be present"
+    },
+    "require_one_group": {
+      "description": "Exactly one group of parameters from groups list must be present"
+    },
+    "all_required": {
+      "description": "All specified parameters must be present together"
+    },
+    "mutually_exclusive": {
+      "description": "Parameters cannot be used together"
+    },
+    "at_least_one": {
+      "description": "At least one parameter from list must be present"
+    },
+    "at_least_one_axis": {
+      "description": "At least one axis parameter must be specified"
+    },
+    "no_parameters": {
+      "description": "Command takes no parameters"
+    },
+    "positive": {
+      "description": "Parameter value must be positive (> 0)"
+    },
+    "positive_or_zero": {
+      "description": "Parameter value must be >= 0"
+    },
+    "valid_range": {
+      "description": "Parameter value must be within specified range (min/max)"
+    },
+    "plane_dependent_offsets": {
+      "description": "Arc offset parameters depend on active plane setting"
+    },
+    "feedrate_must_be_set": {
+      "description": "Feedrate F must be set before or with first motion command"
+    },
+    "endpoint_required": {
+      "description": "Arc endpoint in active plane must be specified"
+    }
+  },
+  
+  "modal_groups": {
+    "motion": {
+      "description": "Motion commands - only one active at a time",
+      "codes": ["G0", "G1", "G2", "G3", "G38.2", "G38.3", "G38.4", "G38.5", "G80", "G81", "G82", "G83", "G84", "G85", "G86", "G87", "G88", "G89"]
+    },
+    "arc_distance_mode": {
+      "description": "Arc center offset interpretation mode (absolute vs incremental) - independent from G90/G91",
+      "codes": ["G90.1", "G91.1"],
+      "default": "G91.1",
+      "notes": "This is separate from general distance mode. G90/G91 controls XYZ, G90.1/G91.1 controls IJK."
+    },
+    "feed_rate_mode": {
+      "description": "Feed rate mode",
+      "codes": ["G93", "G94", "G95"]
+    },
+    "plane": {
+      "description": "Plane selection for arcs",
+      "codes": ["G17", "G18", "G19"]
+    },
+    "units": {
+      "description": "Unit selection (inches/mm)",
+      "codes": ["G20", "G21"]
+    },
+    "distance_mode": {
+      "description": "Absolute vs relative positioning",
+      "codes": ["G90", "G91"]
+    },
+    "spindle": {
+      "description": "Spindle/laser state",
+      "codes": ["M3", "M4", "M5"]
+    },
+    "coolant": {
+      "description": "Coolant state",
+      "codes": ["M7", "M8", "M9"]
+    },
+    "non_modal": {
+      "description": "Non-modal commands - execute once and don't stay active",
+      "codes": ["G4", "G10", "G28", "G29", "G30", "G92", "M0", "M1", "M2", "M30"]
+    }
+  },
+  
+  "parameter_types": {
+    "float": {
+      "description": "Floating point number",
+      "regex": "^[+-]?\\d*\\.?\\d+$",
+      "examples": ["10", "10.5", "-5.25", "+100.0"]
+    },
+    "integer": {
+      "description": "Integer number",
+      "regex": "^[+-]?\\d+$",
+      "examples": ["10", "-5", "+100"]
+    },
+    "flag": {
+      "description": "Presence flag (no value needed)",
+      "examples": ["X", "Y", "Z"]
+    }
+  },
+  
+  "syntax_rules": {
+    "command_format": "^[GM]\\d+(\\.\\d+)?$",
+    "parameter_format": "^[A-Z][+-]?\\d*\\.?\\d*$",
+    "line_number_format": "^N\\d+$",
+    "checksum_format": "^\\*\\d+$",
+    "decimal_separator": ".",
+    "case_sensitivity": "insensitive (most firmware)",
+    "whitespace": "space and tab allowed between parameters",
+    "comment_semicolon": "; to end of line",
+    "comment_parenthesis": "( text ) inline",
+    "max_commands_per_line": "multiple G/M commands allowed (separated by space/tab)"
+  },
+
+  "modal_command_behavior": {
+    "description": "Rules for handling modal commands that stay active across multiple lines",
+    "canned_cycles": {
+      "commands": ["G81", "G82", "G83", "G84", "G85", "G86", "G87", "G88", "G89"],
+      "behavior": {
+        "initial_call": {
+          "required": ["cycle_specific_params"],
+          "description": "First call must include all required parameters (Z, R, F, and cycle-specific like P for G82 or Q for G83)"
+        },
+        "subsequent_calls": {
+          "required": ["position_params_optional"],
+          "allowed": ["X", "Y", "Z", "L"],
+          "description": "Subsequent lines can specify only position (X, Y) to repeat cycle. Can also update Z or L if needed.",
+          "sticky_params": ["Z", "R", "F", "P", "Q"],
+          "note": "All cycle parameters remain active until cycle is cancelled"
+        },
+        "cancellation": {
+          "commands": ["G80", "G0", "G1", "G2", "G3"],
+          "description": "Cycle is cancelled by G80 or any other motion mode command"
+        },
+        "validation": {
+          "parser_must_track": [
+            "Currently active modal command",
+            "Sticky parameter values from initial call",
+            "Whether required parameters were set in initial call"
+          ],
+          "line_validation": {
+            "first_line": "Validate all required params present",
+            "subsequent_lines": "Allow position-only params, use sticky values for others"
+          }
+        }
+      },
+      "example_state_machine": {
+        "line1": "G81 Z-5 R1 F100 X10 Y10 -> Store: active_mode=G81, sticky={Z:-5, R:1, F:100}, Execute: drill at X10 Y10",
+        "line2": "X20 Y10 -> Check: G81 active, Use sticky params, Execute: drill at X20 Y10",
+        "line3": "X30 Y10 -> Check: G81 active, Use sticky params, Execute: drill at X30 Y10",
+        "line4": "G80 -> Clear: active_mode=none, sticky={}, Execute: cancel cycle"
+      }
+    },
+    "other_modal_commands": {
+      "G0_G1": {
+        "sticky_params": ["F"],
+        "note": "Feedrate F is sticky across all motion commands"
+      },
+      "G90_G91": {
+        "sticky_params": [],
+        "note": "Distance mode stays active until explicitly changed"
+      },
+      "M3_M4_M5": {
+        "sticky_params": ["S"],
+        "note": "Spindle speed S is sticky"
+      }
+    }
+  }
+
+}
