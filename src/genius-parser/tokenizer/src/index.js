@@ -17,7 +17,8 @@ export default function tokenize(line) {
     commentParen: /^\(.*?\)/,
     lineNumber: /^N\d+/i,
     command: /^[GMT]\d+(?:\.\d+)?/i,
-    parameter: /^[A-Z][-+]?\d+(?:\.\d+)?/i
+    parameterWithValue: /^[A-Z][-+]?\d+(?:\.\d+)?/i,
+    parameterAsFlag: /^[A-Z]/i
   };
 
   let position = 0;
@@ -85,8 +86,8 @@ export default function tokenize(line) {
       continue;
     }
 
-    // 6. Parameter
-    match = remaining.match(patterns.parameter);
+    // 6. Parameter with Value
+    match = remaining.match(patterns.parameterWithValue);
     if (match) {
       const fullMatch = match[0];
       const letter = fullMatch[0];
@@ -102,7 +103,23 @@ export default function tokenize(line) {
       continue;
     }
 
-    // 7. Error
+    // 7. Parameter as Flag
+    match = remaining.match(patterns.parameterAsFlag);
+    if (match) {
+        const fullMatch = match[0];
+        const letter = fullMatch[0];
+        const token = new Token('PARAMETER', null, position, position + fullMatch.length);
+        token.letter = letter.toUpperCase();
+        if (letter !== letter.toUpperCase()) {
+            token.isLowercase = true;
+        }
+        tokens.push(token);
+        position += fullMatch.length;
+        matched = true;
+        continue;
+    }
+
+    // 8. Error
     if (!matched) {
       let errorEnd = position + 1;
       while (errorEnd < line.length) {
