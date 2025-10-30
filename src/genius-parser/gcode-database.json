@@ -308,16 +308,10 @@
           "condition": "first_motion_command",
           "error": "Feedrate F must be specified before first G1 move",
           "firmware_exception": ["reprapfirmware"]
-        },
-        {
-          "rule": "require",
-              "params": ["F"],
-          "error": "Feedrate F must be specified",
-          "firmware_exception": ["grbl"]
         }
       ]
     },
-    
+
     {
       "code": "G2",
       "name": "Clockwise Arc",
@@ -354,29 +348,31 @@
           "type": "float",
           "unit": "mm or inches",
           "description": "Arc center offset from current X position",
-          "required": false
+          "required": false,
+          "default": 0
         },
         {
           "name": "J",
           "type": "float",
           "unit": "mm or inches",
           "description": "Arc center offset from current Y position",
-          "required": false
+          "required": false,
+          "default": 0
         },
         {
           "name": "K",
           "type": "float",
           "unit": "mm or inches",
           "description": "Arc center offset from current Z position (for helical arcs)",
-          "required": false
+          "required": false,
+          "default": 0
         },
         {
           "name": "R",
           "type": "float",
           "unit": "mm or inches",
-          "description": "Arc radius (alternative to I/J/K)",
-          "required": false,
-          "min_value": 0
+          "description": "Arc radius (alternative to I/J/K). Positive for arcs ≤180°, negative for arcs >180°",
+          "required": false
         },
         {
           "name": "E",
@@ -389,7 +385,7 @@
         {
           "name": "F",
           "type": "float",
-          "unit": "mm/min",
+          "unit": "units/min (or units/rev in G95 mode, or inverse time in G93 mode)",
           "description": "Feedrate for arc",
           "required": false,
           "min_value": 0,
@@ -441,12 +437,24 @@
           }
         },
         {
-          "rule": "endpoint_required",
+          "rule": "endpoint_different_for_radius",
+          "description": "When using R format, endpoint must differ from start point",
+          "condition": "R is specified",
+          "error": "Endpoint cannot be same as start point when using R (use I/J/K format for full circles)"
+        },
+        {
+          "rule": "full_circle_with_ijk_only",
+          "description": "Full circles (360°) can only be programmed with I/J/K format, not with R",
+          "error": "Cannot program full circle with R parameter"
+        },
+        {
+          "rule": "endpoint_in_active_plane",
           "params": ["X", "Y", "Z"],
-          "condition": "at_least_one_in_active_plane",
-          "error": "Must specify endpoint in active plane"
+          "condition": "at_least_one_in_active_plane_or_same_as_start",
+          "error": "Must specify endpoint in active plane (or same as start for full circle with I/J/K)"
         }
       ],
+      "notes": "R format is not recommended for arcs near 180° or 360° due to numerical instability. A small endpoint error can cause large center point displacement. Use I/J/K format for such cases.",
       "firmware_variations": [
         {
           "firmware": ["marlin"],
@@ -464,7 +472,6 @@
         }
       ]
     },
-    
     {
       "code": "G3",
       "name": "Counter-Clockwise Arc",
@@ -501,29 +508,31 @@
           "type": "float",
           "unit": "mm or inches",
           "description": "Arc center offset from current X position",
-          "required": false
+          "required": false,
+          "default": 0
         },
         {
           "name": "J",
           "type": "float",
           "unit": "mm or inches",
           "description": "Arc center offset from current Y position",
-          "required": false
+          "required": false,
+          "default": 0
         },
         {
           "name": "K",
           "type": "float",
           "unit": "mm or inches",
-          "description": "Arc center offset from current Z position",
-          "required": false
+          "description": "Arc center offset from current Z position (for helical arcs)",
+          "required": false,
+          "default": 0
         },
         {
           "name": "R",
           "type": "float",
           "unit": "mm or inches",
-          "description": "Arc radius (alternative to I/J/K)",
-          "required": false,
-          "min_value": 0
+          "description": "Arc radius (alternative to I/J/K). Positive for arcs ≤180°, negative for arcs >180°",
+          "required": false
         },
         {
           "name": "E",
@@ -536,10 +545,19 @@
         {
           "name": "F",
           "type": "float",
-          "unit": "mm/min",
+          "unit": "units/min (or units/rev in G95 mode, or inverse time in G93 mode)",
           "description": "Feedrate for arc",
           "required": false,
+          "min_value": 0,
           "sticky": true
+        },
+        {
+          "name": "P",
+          "type": "integer",
+          "description": "Number of complete circles before arriving at target",
+          "required": false,
+          "firmware_specific": ["linuxcnc", "mach3"],
+          "min_value": 0
         }
       ],
       "constraints": [
@@ -551,11 +569,70 @@
             ["I", "K"],
             ["J", "K"]
           ],
-          "error": "Must specify either R (radius) or center offsets (I/J/K)"
+          "error": "Must specify either R (radius) or center offsets (I/J/K for active plane)",
+          "details": "Cannot mix R with I/J/K. Choose radius format OR center format."
+        },
+        {
+          "rule": "mutually_exclusive",
+          "params": ["R", "I"],
+          "error": "Cannot use R and I together"
+        },
+        {
+          "rule": "mutually_exclusive",
+          "params": ["R", "J"],
+          "error": "Cannot use R and J together"
+        },
+        {
+          "rule": "mutually_exclusive",
+          "params": ["R", "K"],
+          "error": "Cannot use R and K together"
+        },
+        {
+          "rule": "plane_dependent_offsets",
+          "description": "I/J/K usage depends on active plane (G17/G18/G19)",
+          "planes": {
+            "G17": ["I", "J"],
+            "G18": ["I", "K"],
+            "G19": ["J", "K"]
+          }
+        },
+        {
+          "rule": "endpoint_different_for_radius",
+          "description": "When using R format, endpoint must differ from start point",
+          "condition": "R is specified",
+          "error": "Endpoint cannot be same as start point when using R (use I/J/K format for full circles)"
+        },
+        {
+          "rule": "full_circle_with_ijk_only",
+          "description": "Full circles (360°) can only be programmed with I/J/K format, not with R",
+          "error": "Cannot program full circle with R parameter"
+        },
+        {
+          "rule": "endpoint_in_active_plane",
+          "params": ["X", "Y", "Z"],
+          "condition": "at_least_one_in_active_plane_or_same_as_start",
+          "error": "Must specify endpoint in active plane (or same as start for full circle with I/J/K)"
+        }
+      ],
+      "notes": "R format is not recommended for arcs near 180° or 360° due to numerical instability. A small endpoint error can cause large center point displacement. Use I/J/K format for such cases.",
+      "firmware_variations": [
+        {
+          "firmware": ["marlin"],
+          "notes": "Not supported on DELTA printers. Requires ARC_SUPPORT enabled.",
+          "limitations": ["no_delta_support"]
+        },
+        {
+          "firmware": ["klipper"],
+          "notes": "Requires [gcode_arcs] section in configuration",
+          "config_required": true
+        },
+        {
+          "firmware": ["grbl"],
+          "notes": "Arc tolerance controlled by $12 setting"
         }
       ]
     },
-    
+
     {
       "code": "G4",
       "name": "Dwell",
@@ -2064,6 +2141,21 @@
       ]
     },
 
+    {
+      "code": "G93",
+      "name": "Inverse Time Feed Rate Mode",
+      "description": "Set feed rate mode to inverse time. The F value represents 1/time in minutes to complete the move.",
+      "modal_group": "feed_rate_mode",
+      "firmware": ["grbl", "mach3", "linuxcnc", "fanuc", "siemens", "haas"],
+      "parameters": [],
+      "constraints": [
+        {
+          "rule": "no_parameters",
+          "error": "G93 takes no parameters"
+        }
+      ],
+      "notes": "G93 is a modal command. It remains active until G94 (feed per minute) or G95 (feed per revolution) is called. In inverse time mode, an F word means the move should be completed in [1/F] minutes. For example, F2.0 means the move should take 0.5 minutes. Primarily used for complex multi-axis moves where constant velocity is required."
+    },
     {
       "code": "G94",
       "name": "Feed Per Minute",
