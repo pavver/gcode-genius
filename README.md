@@ -91,6 +91,23 @@ A detailed history of all changes is available in our [CHANGELOG.md](CHANGELOG.m
 
 **G-code Genius is built to be your indispensable assistant in the world of CNC. Try it today!**
 
+## Support the Project / Підтримати проект
+
+If you find this extension useful and want to support development or speed up new features:
+
+**Donate via:**
+- 🇺🇦 [Donatello](https://donatello.to/pavver) — Ukrainian service supporting:
+  - 💳 Visa/Mastercard
+  - 🪙 Cryptocurrency (USDT)
+  - 🏦 Other payment methods
+- 🌍 PayPal: pavvers1@gmail.com
+
+Your support helps keep this project alive and growing. Thank you! / Дякую за підтримку! 💙💛
+
+---
+
+You can contact me via [telegram](https://t.me/pavver) or pavvers1@gmail.com.
+
 ---
 ## Acknowledgements
 This project was inspired by the great work on [nc_view_vscode](https://github.com/noahlias/nc_view_vscode).
