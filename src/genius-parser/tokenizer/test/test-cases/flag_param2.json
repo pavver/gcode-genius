@@ -1,6 +1,6 @@
 [
   {
-    "type": "COMMAND_G",
+    "type": "COMMAND",
     "value": "28",
     "startOffset": 0,
     "endOffset": 3,

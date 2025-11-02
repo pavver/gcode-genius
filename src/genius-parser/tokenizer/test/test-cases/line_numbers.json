@@ -7,7 +7,7 @@
     "letter": "N"
   },
   {
-    "type": "COMMAND_G",
+    "type": "COMMAND",
     "value": "0",
     "startOffset": 2,
     "endOffset": 4,

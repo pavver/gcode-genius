@@ -71,7 +71,7 @@ export default function tokenize(line) {
     if (match) {
       const fullMatch = match[0];
       const letter = fullMatch[0];
-      const token = new Token(`COMMAND_${letter.toUpperCase()}`, fullMatch.substring(1), position, position + fullMatch.length);
+      const token = new Token('COMMAND', fullMatch.substring(1), position, position + fullMatch.length);
       token.letter = letter;
       tokens.push(token);
       position += fullMatch.length;
