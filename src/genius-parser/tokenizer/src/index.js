@@ -16,8 +16,8 @@ export default function tokenize(line) {
     commentSemicolon: /^;.*/,
     commentParen: /^\(.*?\)/,
     lineNumber: /^N\d+/i,
-    command: /^[GMT]\d+(?:\.\d+)?/i,
-    parameterWithValue: /^[A-Z][-+]?\d+(?:\.\d+)?/i,
+    command: /^[GMT]\d*\.?\d+/i,
+    parameterWithValue: /^[A-Z][-+]?(?:\d+\.?\d*|\.\d+)/i,
     parameterAsFlag: /^[A-Z]/i
   };
 
@@ -58,12 +58,8 @@ export default function tokenize(line) {
     match = remaining.match(patterns.lineNumber);
     if (match) {
       const fullMatch = match[0];
-      const letter = fullMatch[0];
-      const token = new Token('LINE_NUMBER', parseFloat(fullMatch.substring(1)), position, position + fullMatch.length);
-      token.letter = letter.toUpperCase();
-      if (letter !== letter.toUpperCase()) {
-        token.isLowercase = true;
-      }
+      const token = new Token('LINE_NUMBER', fullMatch.substring(1), position, position + fullMatch.length);
+      token.letter = fullMatch[0];
       tokens.push(token);
       position += fullMatch.length;
       matched = true;
@@ -75,11 +71,8 @@ export default function tokenize(line) {
     if (match) {
       const fullMatch = match[0];
       const letter = fullMatch[0];
-      const number = parseInt(fullMatch.substring(1), 10);
-      const token = new Token(`COMMAND_${letter.toUpperCase()}`, `${letter.toUpperCase()}${number}`, position, position + fullMatch.length);
-      if (letter !== letter.toUpperCase()) {
-        token.isLowercase = true;
-      }
+      const token = new Token(`COMMAND_${letter.toUpperCase()}`, fullMatch.substring(1), position, position + fullMatch.length);
+      token.letter = letter;
       tokens.push(token);
       position += fullMatch.length;
       matched = true;
@@ -90,13 +83,8 @@ export default function tokenize(line) {
     match = remaining.match(patterns.parameterWithValue);
     if (match) {
       const fullMatch = match[0];
-      const letter = fullMatch[0];
-      const value = parseFloat(fullMatch.substring(1));
-      const token = new Token('PARAMETER', value, position, position + fullMatch.length);
-      token.letter = letter.toUpperCase();
-      if (letter !== letter.toUpperCase()) {
-        token.isLowercase = true;
-      }
+      const token = new Token('PARAMETER', fullMatch.substring(1), position, position + fullMatch.length);
+      token.letter = fullMatch[0];
       tokens.push(token);
       position += fullMatch.length;
       matched = true;
@@ -107,12 +95,8 @@ export default function tokenize(line) {
     match = remaining.match(patterns.parameterAsFlag);
     if (match) {
         const fullMatch = match[0];
-        const letter = fullMatch[0];
         const token = new Token('PARAMETER', null, position, position + fullMatch.length);
-        token.letter = letter.toUpperCase();
-        if (letter !== letter.toUpperCase()) {
-            token.isLowercase = true;
-        }
+        token.letter = fullMatch[0];
         tokens.push(token);
         position += fullMatch.length;
         matched = true;

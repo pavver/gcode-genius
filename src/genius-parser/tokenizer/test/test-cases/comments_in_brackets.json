@@ -8,14 +8,14 @@
   },
   {
     "type": "COMMAND_G",
-    "value": "G0",
+    "value": "0",
     "startOffset": 7,
     "endOffset": 9,
-    "letter": null
+    "letter": "G"
   },
   {
     "type": "PARAMETER",
-    "value": 10,
+    "value": "10",
     "startOffset": 10,
     "endOffset": 13,
     "letter": "X"
@@ -29,14 +29,14 @@
   },
   {
     "type": "PARAMETER",
-    "value": 20,
+    "value": "20",
     "startOffset": 22,
     "endOffset": 25,
     "letter": "Y"
   },
   {
     "type": "PARAMETER",
-    "value": 22,
+    "value": "22",
     "startOffset": 26,
     "endOffset": 29,
     "letter": "Z"

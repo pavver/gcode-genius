@@ -1,0 +1,37 @@
+[
+  {
+    "type": "LINE_NUMBER",
+    "value": "100",
+    "startOffset": 0,
+    "endOffset": 4,
+    "letter": "N"
+  },
+  {
+    "type": "COMMAND_G",
+    "value": "3.3",
+    "startOffset": 6,
+    "endOffset": 10,
+    "letter": "G"
+  },
+  {
+    "type": "PARAMETER",
+    "value": "010.00",
+    "startOffset": 11,
+    "endOffset": 18,
+    "letter": "X"
+  },
+  {
+    "type": "PARAMETER",
+    "value": "10.",
+    "startOffset": 19,
+    "endOffset": 23,
+    "letter": "X"
+  },
+  {
+    "type": "PARAMETER",
+    "value": "20.0000",
+    "startOffset": 24,
+    "endOffset": 32,
+    "letter": "Z"
+  }
+]

@@ -1,10 +1,10 @@
 [
   {
     "type": "COMMAND_G",
-    "value": "G28",
+    "value": "28",
     "startOffset": 0,
     "endOffset": 3,
-    "letter": null
+    "letter": "G"
   },
   {
     "type": "ERROR",
