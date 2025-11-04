@@ -41,6 +41,7 @@ The syntax validator inspects an array of tokens from the `Tokenizer`. It does n
 ### Checks Performed:
 -   **Spacing Between Tokens**:
     -   Ensures there is exactly one space between most tokens.
+    -   For consecutive parameter flags (e.g., `X`, `Y`, `Z`), allows a space of `0` or `1`. An error is flagged only if the space is greater than `1`. This allows for both `G0 XYZ` and `G0 X Y Z`.
     -   Allows any amount of whitespace (at least one space) before a comment token at the end of a line.
 -   **Uppercase Letters**: Flags any command or parameter letters that are lowercase (e.g., `g0` instead of `G0`).
 -   **Leading Zeros in Integers**:

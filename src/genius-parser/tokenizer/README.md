@@ -4,7 +4,7 @@
 
 The Tokenizer is a core module in the G-Code Genius Parser responsible for breaking down a raw G-code string (a single line) into a structured array of tokens. This process is the first step in the parsing pipeline, enabling subsequent modules to work with a well-defined data structure instead of raw text.
 
-The tokenizer is designed to be robust, correctly identifying commands, parameters (with and without values), comments, and malformed code.
+The tokenizer is designed to be robust, correctly identifying commands, parameters, comments, and malformed code.
 
 ## Structure
 
@@ -23,15 +23,27 @@ tokenizer/
 
 The tokenizer is a default export function `tokenize(line)` from `src/index.js`. It iterates through the input string, using a series of regular expressions to identify and classify each part of the line.
 
-### Token Types
+### Advanced Flag and Word Handling
 
-The tokenizer can identify the following token types:
+A key feature of the tokenizer is its ability to differentiate between valid sequences of G-code flags and other words or "gibberish".
+
+1.  **Valid Flags:** The tokenizer recognizes a specific set of characters as valid flags: **`X`**, **`Y`**, **`Z`**, and **`O`** (case-insensitive).
+2.  **Word Analysis:** When the tokenizer encounters a sequence of 2 or more letters (a "word"), it analyzes its content:
+    *   If the word consists **entirely** of valid flag characters (e.g., `"XYZ"`), it is broken down into a sequence of individual `PARAMETER` flag tokens.
+    *   If the word contains **any** character not in the valid flag set (e.g., `"XQZ"`, `"edddad"`), the entire word is treated as a single `ERROR` token.
+3.  **Single Characters:** A single letter is only tokenized as a `PARAMETER` flag if it belongs to the valid set. A single invalid letter (e.g., `E`) will be tokenized as an `ERROR`.
+
+This logic prevents a cascade of "missing space" errors from the validator and provides a much cleaner initial parse of the G-code line.
+
+### Token Types
 
 -   **`LINE_NUMBER`**: The line number, e.g., `N100`.
 -   **`COMMAND`**: G, M, or T commands, e.g., `G0`, `M3`.
--   **`PARAMETER`**: A parameter word. This can be a parameter with a value (e.g., `X10.5`, `F500`) or a parameter acting as a flag (e.g., a standalone `X`).
+-   **`PARAMETER`**: A parameter word.
+    -   Can have a value (e.g., `X10.5`).
+    -   Can be a "flag" with a `null` value. A flag must be one of the valid characters (`X, Y, Z, O`).
 -   **`COMMENT`**: A comment, either starting with `;` or enclosed in `()`.
--   **`ERROR`**: Any part of the string that doesn't match the above patterns.
+-   **`ERROR`**: Any part of the string that doesn't match the above patterns, including invalid words.
 
 ### Number Formatting
 
