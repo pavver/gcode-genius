@@ -25,9 +25,15 @@
   },
   {
     "severity": "warning",
-    "message": "warning.invalid_spacing_between_tokens",
+    "message": "warning.invalid_spacing_before_comment",
     "start": 13,
     "end": 13
+  },
+  {
+    "severity": "warning",
+    "message": "warning.lowercase_letter",
+    "start": 2,
+    "end": 3
   },
   {
     "severity": "warning",

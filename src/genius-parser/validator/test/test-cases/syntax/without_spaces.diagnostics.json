@@ -19,7 +19,7 @@
   },
   {
     "severity": "warning",
-    "message": "warning.invalid_spacing_between_tokens",
+    "message": "warning.invalid_spacing_before_comment",
     "start": 11,
     "end": 11
   }

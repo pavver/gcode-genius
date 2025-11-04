@@ -1,0 +1,32 @@
+[
+  {
+    "type": "COMMAND",
+    "letter": "G",
+    "value": "0",
+    "startOffset": 0
+  },
+  {
+    "type": "PARAMETER",
+    "letter": "X",
+    "value": "10",
+    "startOffset": 2
+  },
+  {
+    "type": "PARAMETER",
+    "letter": "Y",
+    "value": "20",
+    "startOffset": 5
+  },
+  {
+    "type": "PARAMETER",
+    "letter": "Z",
+    "value": "22",
+    "startOffset": 8
+  },
+  {
+    "type": "COMMENT",
+    "letter": null,
+    "value": ";555",
+    "startOffset": 11
+  }
+]

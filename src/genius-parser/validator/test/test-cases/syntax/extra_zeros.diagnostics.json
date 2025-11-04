@@ -7,8 +7,8 @@
   },
   {
     "severity": "warning",
-    "message": "warning.extra_zero_in_parameter",
-    "start": 7,
+    "message": "warning.trailing_zeros_in_parameter",
+    "start": 9,
     "end": 11
   }
 ]

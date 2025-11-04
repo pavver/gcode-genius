@@ -1,0 +1,41 @@
+import { Validator } from '../src/index.js';
+import fs from 'fs';
+import path from 'path';
+import { fileURLToPath } from 'url';
+
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
+
+describe('Validator Semantic Tests', () => {
+  const scenario = 'semantic';
+  const testCasesRoot = path.join(__dirname, 'test-cases');
+  const scenarioDir = path.join(testCasesRoot, scenario);
+
+  describe(`Scenario: ${scenario}`, () => {
+    const dbPath = path.join(scenarioDir, 'gcode-database.json');
+
+    if (!fs.existsSync(scenarioDir) || !fs.existsSync(dbPath)) {
+      it.skip(`Skipping semantic tests - scenario folder "${scenario}" or gcode-database.json not found`, () => {});
+      return;
+    }
+
+    const gcodeDatabase = JSON.parse(fs.readFileSync(dbPath, 'utf-8'));
+    const validator = new Validator(gcodeDatabase);
+
+    const testFiles = fs.readdirSync(scenarioDir)
+      .filter(file => file.endsWith('.json') && !file.endsWith('.diagnostics.json') && file !== 'gcode-database.json');
+
+    test.each(testFiles)('should validate %s correctly', (file) => {
+      const testName = path.basename(file, '.json');
+      const inputFile = path.join(scenarioDir, file);
+      const expectedFile = path.join(scenarioDir, `${testName}.diagnostics.json`);
+
+      const commands = JSON.parse(fs.readFileSync(inputFile, 'utf-8'));
+      const expectedDiagnostics = JSON.parse(fs.readFileSync(expectedFile, 'utf-8'));
+
+      // TODO: This needs to be updated to call the semantic validator only
+      const diagnostics = validator.getDiagnostics(commands);
+      expect(diagnostics).toEqual(expectedDiagnostics);
+    });
+  });
+});
