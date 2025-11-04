@@ -27,13 +27,11 @@ The tokenizer is a default export function `tokenize(line)` from `src/index.js`.
 
 The tokenizer can identify the following token types:
 
--   **`LINE_NUMBER`**: The line number, e.g., `N100`. The `value` will be `"100"`.
--   **`COMMAND`**: G, M, or T commands, e.g., `G0`, `M3`. The `value` holds the number part of the command, and the `letter` property will indicate the command type (e.g., `'G'`, `'M'`, `'T'`).
+-   **`LINE_NUMBER`**: The line number, e.g., `N100`.
+-   **`COMMAND`**: G, M, or T commands, e.g., `G0`, `M3`.
 -   **`PARAMETER`**: A parameter word. This can be a parameter with a value (e.g., `X10.5`, `F500`) or a parameter acting as a flag (e.g., a standalone `X`).
-    -   If it has a value, the `value` property will be a string (e.g., `"10.5"`).
-    -   If it's a flag, the `value` property will be `null`.
--   **`COMMENT`**: A comment, either starting with `;` or enclosed in `()`. The `value` contains the full comment text.
--   **`ERROR`**: Any part of the string that doesn't match the above patterns. This is crucial for identifying syntax errors early.
+-   **`COMMENT`**: A comment, either starting with `;` or enclosed in `()`.
+-   **`ERROR`**: Any part of the string that doesn't match the above patterns.
 
 ### Number Formatting
 
@@ -45,22 +43,26 @@ The regular expression for numbers is designed to be flexible and supports sever
 
 ### Output Token Structure
 
-The `tokenize` function returns an array of `Token` objects. Each token has the following structure:
+The `tokenize` function returns an array of `Token` objects. The `Token` constructor is `new Token(type, letter, value, startOffset)`.
+
+Each token has the following structure:
 
 ```json
 {
   "type": "COMMAND",
+  "letter": "G",
   "value": "0",
-  "startOffset": 0,
-  "endOffset": 2,
-  "letter": "G"
+  "startOffset": 4
 }
 ```
 - **`type`**: The type of the token (e.g., `'COMMAND'`, `'PARAMETER'`).
-- **`value`**: The value of the token. For a command `G0`, this would be `"0"`. For a parameter `X10.5`, this would be `"10.5"`. For a comment `(MSG)`, this would be `"(MSG)"`.
+- **`letter`**: The letter part of the token, where applicable (e.g., `'G'` for a command, `'X'` for a parameter). Is `null` for comments and errors.
+- **`value`**: The value of the token.
+    - For a command `G0`, this would be `"0"`.
+    - For a parameter `X10.5`, this would be `"10.5"`.
+    - For a parameter flag `X`, this would be `null`.
+    - For a comment `(MSG)`, this would be `"(MSG)"`.
 - **`startOffset`**: The starting index of the token in the original string.
-- **`endOffset`**: The ending index of the token in the original string.
-- **`letter`**: The letter part of the token, where applicable (e.g., `'G'` for a command, `'X'` for a parameter).
 
 ## Usage Example
 
@@ -80,38 +82,33 @@ This would produce the following output:
 [
   {
     "type": "LINE_NUMBER",
+    "letter": "N",
     "value": "10",
-    "startOffset": 0,
-    "endOffset": 3,
-    "letter": "N"
+    "startOffset": 0
   },
   {
     "type": "COMMAND",
+    "letter": "G",
     "value": "0",
-    "startOffset": 4,
-    "endOffset": 6,
-    "letter": "G"
+    "startOffset": 4
   },
   {
     "type": "PARAMETER",
+    "letter": "X",
     "value": "1.",
-    "startOffset": 7,
-    "endOffset": 10,
-    "letter": "X"
+    "startOffset": 7
   },
   {
     "type": "PARAMETER",
+    "letter": "Y",
     "value": ".5",
-    "startOffset": 11,
-    "endOffset": 14,
-    "letter": "Y"
+    "startOffset": 11
   },
   {
     "type": "COMMENT",
+    "letter": null,
     "value": "; move to position",
-    "startOffset": 15,
-    "endOffset": 33,
-    "letter": null
+    "startOffset": 15
   }
 ]
 ```

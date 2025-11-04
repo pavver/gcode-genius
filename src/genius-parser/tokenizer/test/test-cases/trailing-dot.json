@@ -1,23 +1,20 @@
 [
   {
     "type": "COMMAND",
+    "letter": "G",
     "value": "0",
-    "startOffset": 0,
-    "endOffset": 2,
-    "letter": "G"
+    "startOffset": 0
   },
   {
     "type": "PARAMETER",
+    "letter": "X",
     "value": "1.",
-    "startOffset": 3,
-    "endOffset": 6,
-    "letter": "X"
+    "startOffset": 3
   },
   {
     "type": "PARAMETER",
+    "letter": "Y",
     "value": "1.",
-    "startOffset": 7,
-    "endOffset": 10,
-    "letter": "Y"
+    "startOffset": 7
   }
 ]

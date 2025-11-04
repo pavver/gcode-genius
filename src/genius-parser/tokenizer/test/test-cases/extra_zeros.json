@@ -1,37 +1,32 @@
 [
   {
     "type": "COMMAND",
+    "letter": "G",
     "value": "01",
-    "startOffset": 0,
-    "endOffset": 3,
-    "letter": "G"
+    "startOffset": 0
   },
   {
     "type": "PARAMETER",
+    "letter": "X",
     "value": "10.000",
-    "startOffset": 4,
-    "endOffset": 11,
-    "letter": "X"
+    "startOffset": 4
   },
   {
     "type": "PARAMETER",
+    "letter": "Y",
     "value": "20",
-    "startOffset": 12,
-    "endOffset": 15,
-    "letter": "Y"
+    "startOffset": 12
   },
   {
     "type": "PARAMETER",
+    "letter": "Z",
     "value": "22",
-    "startOffset": 16,
-    "endOffset": 19,
-    "letter": "Z"
+    "startOffset": 16
   },
   {
     "type": "COMMENT",
+    "letter": null,
     "value": ";test3",
-    "startOffset": 20,
-    "endOffset": 26,
-    "letter": null
+    "startOffset": 20
   }
 ]

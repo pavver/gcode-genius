@@ -1,23 +1,20 @@
 [
   {
     "type": "COMMAND",
+    "letter": "G",
     "value": "28",
-    "startOffset": 0,
-    "endOffset": 3,
-    "letter": "G"
+    "startOffset": 0
   },
   {
     "type": "ERROR",
+    "letter": null,
     "value": "В",
-    "startOffset": 4,
-    "endOffset": 5,
-    "letter": null
+    "startOffset": 4
   },
   {
     "type": "PARAMETER",
+    "letter": "Y",
     "value": null,
-    "startOffset": 6,
-    "endOffset": 7,
-    "letter": "Y"
+    "startOffset": 6
   }
 ]

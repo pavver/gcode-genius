@@ -1,37 +1,32 @@
 [
   {
     "type": "LINE_NUMBER",
+    "letter": "N",
     "value": "100",
-    "startOffset": 0,
-    "endOffset": 4,
-    "letter": "N"
+    "startOffset": 0
   },
   {
     "type": "COMMAND",
+    "letter": "G",
     "value": "3.3",
-    "startOffset": 6,
-    "endOffset": 10,
-    "letter": "G"
+    "startOffset": 6
   },
   {
     "type": "PARAMETER",
+    "letter": "X",
     "value": "010.00",
-    "startOffset": 11,
-    "endOffset": 18,
-    "letter": "X"
+    "startOffset": 11
   },
   {
     "type": "PARAMETER",
+    "letter": "X",
     "value": "10.",
-    "startOffset": 19,
-    "endOffset": 23,
-    "letter": "X"
+    "startOffset": 19
   },
   {
     "type": "PARAMETER",
+    "letter": "Z",
     "value": "20.0000",
-    "startOffset": 24,
-    "endOffset": 32,
-    "letter": "Z"
+    "startOffset": 24
   }
 ]

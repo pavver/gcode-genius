@@ -1,10 +1,9 @@
 class Token {
-  constructor(type, value, startOffset, endOffset) {
+  constructor(type, letter, value, startOffset) {
     this.type = type;
+    this.letter = letter;
     this.value = value;
     this.startOffset = startOffset;
-    this.endOffset = endOffset;
-    this.letter = null;
   }
 }
 
@@ -38,7 +37,7 @@ export default function tokenize(line) {
     match = remaining.match(patterns.commentSemicolon);
     if (match) {
       const fullMatch = match[0];
-      tokens.push(new Token('COMMENT', fullMatch, position, position + fullMatch.length));
+      tokens.push(new Token('COMMENT', null, fullMatch, position, position));
       position += fullMatch.length;
       matched = true;
       continue;
@@ -48,7 +47,7 @@ export default function tokenize(line) {
     match = remaining.match(patterns.commentParen);
     if (match) {
       const fullMatch = match[0];
-      tokens.push(new Token('COMMENT', fullMatch, position, position + fullMatch.length));
+      tokens.push(new Token('COMMENT', null, fullMatch, position, position));
       position += fullMatch.length;
       matched = true;
       continue;
@@ -58,8 +57,7 @@ export default function tokenize(line) {
     match = remaining.match(patterns.lineNumber);
     if (match) {
       const fullMatch = match[0];
-      const token = new Token('LINE_NUMBER', fullMatch.substring(1), position, position + fullMatch.length);
-      token.letter = fullMatch[0];
+      const token = new Token('LINE_NUMBER', fullMatch[0], fullMatch.substring(1), position);
       tokens.push(token);
       position += fullMatch.length;
       matched = true;
@@ -70,9 +68,7 @@ export default function tokenize(line) {
     match = remaining.match(patterns.command);
     if (match) {
       const fullMatch = match[0];
-      const letter = fullMatch[0];
-      const token = new Token('COMMAND', fullMatch.substring(1), position, position + fullMatch.length);
-      token.letter = letter;
+      const token = new Token('COMMAND', fullMatch[0], fullMatch.substring(1), position);
       tokens.push(token);
       position += fullMatch.length;
       matched = true;
@@ -83,8 +79,7 @@ export default function tokenize(line) {
     match = remaining.match(patterns.parameterWithValue);
     if (match) {
       const fullMatch = match[0];
-      const token = new Token('PARAMETER', fullMatch.substring(1), position, position + fullMatch.length);
-      token.letter = fullMatch[0];
+      const token = new Token('PARAMETER', fullMatch[0], fullMatch.substring(1), position);
       tokens.push(token);
       position += fullMatch.length;
       matched = true;
@@ -94,13 +89,12 @@ export default function tokenize(line) {
     // 7. Parameter as Flag
     match = remaining.match(patterns.parameterAsFlag);
     if (match) {
-        const fullMatch = match[0];
-        const token = new Token('PARAMETER', null, position, position + fullMatch.length);
-        token.letter = fullMatch[0];
-        tokens.push(token);
-        position += fullMatch.length;
-        matched = true;
-        continue;
+      const fullMatch = match[0];
+      const token = new Token('PARAMETER', fullMatch[0], null, position);
+      tokens.push(token);
+      position += fullMatch.length;
+      matched = true;
+      continue;
     }
 
     // 8. Error
@@ -115,7 +109,7 @@ export default function tokenize(line) {
       }
 
       const errorStr = line.substring(position, errorEnd);
-      tokens.push(new Token('ERROR', errorStr, position, errorEnd));
+      tokens.push(new Token('ERROR', null, errorStr, position));
       position = errorEnd;
     }
   }
