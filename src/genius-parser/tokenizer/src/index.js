@@ -9,6 +9,7 @@ class Token {
 
 export default function tokenize(line) {
   const tokens = [];
+  const validFlags = new Set(['X', 'Y', 'Z', 'O']);
 
   const patterns = {
     whitespace: /^\s+/,
@@ -17,6 +18,7 @@ export default function tokenize(line) {
     lineNumber: /^N\d+/i,
     command: /^[GMT]\d*\.?\d+/i,
     parameterWithValue: /^[A-Z][-+]?(?:\d+\.?\d*|\.\d+)/i,
+    word: /^[A-Z]{2,}/i, // New pattern for multi-letter words
     parameterAsFlag: /^[A-Z]/i
   };
 
@@ -37,7 +39,7 @@ export default function tokenize(line) {
     match = remaining.match(patterns.commentSemicolon);
     if (match) {
       const fullMatch = match[0];
-      tokens.push(new Token('COMMENT', null, fullMatch, position, position));
+      tokens.push(new Token('COMMENT', null, fullMatch, position));
       position += fullMatch.length;
       matched = true;
       continue;
@@ -47,7 +49,7 @@ export default function tokenize(line) {
     match = remaining.match(patterns.commentParen);
     if (match) {
       const fullMatch = match[0];
-      tokens.push(new Token('COMMENT', null, fullMatch, position, position));
+      tokens.push(new Token('COMMENT', null, fullMatch, position));
       position += fullMatch.length;
       matched = true;
       continue;
@@ -57,8 +59,7 @@ export default function tokenize(line) {
     match = remaining.match(patterns.lineNumber);
     if (match) {
       const fullMatch = match[0];
-      const token = new Token('LINE_NUMBER', fullMatch[0], fullMatch.substring(1), position);
-      tokens.push(token);
+      tokens.push(new Token('LINE_NUMBER', fullMatch[0], fullMatch.substring(1), position));
       position += fullMatch.length;
       matched = true;
       continue;
@@ -68,8 +69,7 @@ export default function tokenize(line) {
     match = remaining.match(patterns.command);
     if (match) {
       const fullMatch = match[0];
-      const token = new Token('COMMAND', fullMatch[0], fullMatch.substring(1), position);
-      tokens.push(token);
+      tokens.push(new Token('COMMAND', fullMatch[0], fullMatch.substring(1), position));
       position += fullMatch.length;
       matched = true;
       continue;
@@ -79,25 +79,50 @@ export default function tokenize(line) {
     match = remaining.match(patterns.parameterWithValue);
     if (match) {
       const fullMatch = match[0];
-      const token = new Token('PARAMETER', fullMatch[0], fullMatch.substring(1), position);
-      tokens.push(token);
+      tokens.push(new Token('PARAMETER', fullMatch[0], fullMatch.substring(1), position));
       position += fullMatch.length;
       matched = true;
       continue;
     }
 
-    // 7. Parameter as Flag
+    // 7. Multi-letter word (potential flags or error)
+    match = remaining.match(patterns.word);
+    if (match) {
+      const fullMatch = match[0];
+      const chars = fullMatch.split('');
+      const allCharsAreValidFlags = chars.every(char => validFlags.has(char.toUpperCase()));
+
+      if (allCharsAreValidFlags) {
+        // Create individual flag tokens
+        for (let i = 0; i < chars.length; i++) {
+          const char = chars[i];
+          tokens.push(new Token('PARAMETER', char, null, position + i));
+        }
+      } else {
+        // Create a single error token for the whole word
+        tokens.push(new Token('ERROR', null, fullMatch, position));
+      }
+      
+      position += fullMatch.length;
+      matched = true;
+      continue;
+    }
+
+    // 8. Single Parameter as Flag (or single-letter error)
     match = remaining.match(patterns.parameterAsFlag);
     if (match) {
       const fullMatch = match[0];
-      const token = new Token('PARAMETER', fullMatch[0], null, position);
-      tokens.push(token);
+      if (validFlags.has(fullMatch.toUpperCase())) {
+        tokens.push(new Token('PARAMETER', fullMatch, null, position));
+      } else {
+        tokens.push(new Token('ERROR', null, fullMatch, position));
+      }
       position += fullMatch.length;
       matched = true;
       continue;
     }
 
-    // 8. Error
+    // 9. Error
     if (!matched) {
       let errorEnd = position + 1;
       while (errorEnd < line.length) {

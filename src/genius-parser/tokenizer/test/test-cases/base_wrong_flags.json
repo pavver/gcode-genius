@@ -1,0 +1,14 @@
+[
+  {
+    "type": "COMMAND",
+    "letter": "G",
+    "value": "28",
+    "startOffset": 0
+  },
+  {
+    "type": "ERROR",
+    "letter": null,
+    "value": "XQZ",
+    "startOffset": 4
+  }
+]

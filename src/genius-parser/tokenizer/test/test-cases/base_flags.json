@@ -1,0 +1,26 @@
+[
+  {
+    "type": "COMMAND",
+    "letter": "G",
+    "value": "28",
+    "startOffset": 0
+  },
+  {
+    "type": "PARAMETER",
+    "letter": "X",
+    "value": null,
+    "startOffset": 4
+  },
+  {
+    "type": "PARAMETER",
+    "letter": "Y",
+    "value": null,
+    "startOffset": 5
+  },
+  {
+    "type": "PARAMETER",
+    "letter": "Z",
+    "value": null,
+    "startOffset": 6
+  }
+]
