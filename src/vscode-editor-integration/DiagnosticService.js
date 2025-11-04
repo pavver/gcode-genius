@@ -33,7 +33,7 @@ export class DiagnosticService {
     const diagnostics = [];
     for (let i = 0; i < tokenizedLines.length; i++) {
       const lineTokens = tokenizedLines[i];
-      const errors = this.#languageService.validate(lineTokens);
+      const errors = this.#languageService.getSyntaxDiagnostics(lineTokens);
       
       for (const error of errors) {
         const range = new vscode.Range(i, error.start, i, error.end);
@@ -41,6 +41,7 @@ export class DiagnosticService {
           ? vscode.DiagnosticSeverity.Error 
           : vscode.DiagnosticSeverity.Warning;
         const diagnostic = new vscode.Diagnostic(range, error.message, severity);
+        diagnostic.errorData = error; // Attach original error for the CodeActionProvider
         diagnostics.push(diagnostic);
       }
     }

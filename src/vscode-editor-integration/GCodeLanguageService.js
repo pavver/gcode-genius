@@ -1,23 +1,42 @@
+import { validateSyntax } from '../genius-parser/validator/src/syntax-validator.js';
+import { canFix, fixError, fixAllErrors } from '../genius-parser/fixer/src/index.js';
+
 /**
  * A stateless service that provides language-related operations
- * like validation and fixing, based on the G-code parser components.
+ * like validation, based on the G-code parser components.
  */
 export class GCodeLanguageService {
-  #validator;
-  #fixer;
-
-  constructor(validator, fixer) {
-    this.#validator = validator;
-    this.#fixer = fixer;
+  /**
+   * @param {Array} tokens An array of tokens for a single line.
+   * @returns {Array} An array of diagnostic objects.
+   */
+  getSyntaxDiagnostics(tokens) {
+    return validateSyntax(tokens);
   }
 
-  validate(tokens) {
-    if (!this.#validator) return [];
-    return this.#validator.getDiagnostics(tokens);
+  /**
+   * @param {object} diagnostic The diagnostic to check.
+   * @returns {boolean} Whether the diagnostic can be fixed.
+   */
+  canFix(diagnostic) {
+    return canFix(diagnostic);
   }
 
-  getFix(error, tokens) {
-    // TODO: Implement fix logic using this.#fixer
-    return null; // Return a workspace edit or similar
+  /**
+   * @param {object} diagnostic The diagnostic to fix.
+   * @param {string} line The line to fix.
+   * @returns {string} The fixed line.
+   */
+  getFix(diagnostic, line) {
+    return fixError(line, diagnostic);
+  }
+
+  /**
+   * @param {object[]} diagnostics The diagnostics to fix.
+   * @param {string} line The line to fix.
+   * @returns {string} The fixed line.
+   */
+  getFixAll(diagnostics, line) {
+    return fixAllErrors(line, diagnostics);
   }
 }
