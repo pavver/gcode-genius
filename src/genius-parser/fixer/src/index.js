@@ -42,7 +42,7 @@ function fixError(gcodeLine, diagnostic) {
     case 'warning.extra_zero_in_command':
       return gcodeLine.slice(0, start) + gcodeLine.slice(end);
     case 'warning.trailing_zeros_in_parameter':
-        return gcodeLine.slice(0, start);
+        return gcodeLine.slice(0, start) + gcodeLine.slice(end);
     case 'warning.missing_leading_zero':
       return gcodeLine.slice(0, start) + '0' + gcodeLine.slice(start);
     case 'warning.missing_trailing_zero':
