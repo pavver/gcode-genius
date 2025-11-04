@@ -5,9 +5,11 @@ import * as vscode from 'vscode';
  */
 export class CodeActionProvider {
   #languageService;
+  #diagnosticService;
 
-  constructor(languageService) {
+  constructor(languageService, diagnosticService) {
     this.#languageService = languageService;
+    this.#diagnosticService = diagnosticService;
   }
 
   provideCodeActions(document, range, context, token) {
@@ -65,13 +67,13 @@ export class CodeActionProvider {
     }
 
     // Action to fix all fixable errors in the file
-    if (fixableDiagnostics.length > 0) {
+    const allFixableDiags = vscode.languages.getDiagnostics(document.uri)
+        .filter(d => d.errorData && this.#languageService.canFix(d.errorData));
+
+    if (this.#diagnosticService.isEnabled() && allFixableDiags.length > 0) {
       const fixAllInFileAction = new vscode.CodeAction('Fix all fixable issues in file', vscode.CodeActionKind.QuickFix);
       fixAllInFileAction.edit = new vscode.WorkspaceEdit();
       const editsByLine = new Map();
-
-      const allFixableDiags = vscode.languages.getDiagnostics(document.uri)
-        .filter(d => d.errorData && this.#languageService.canFix(d.errorData));
 
       for (const diag of allFixableDiags) {
         const lineNum = diag.range.start.line;
@@ -89,6 +91,17 @@ export class CodeActionProvider {
 
       fixAllInFileAction.diagnostics = allFixableDiags;
       actions.push(fixAllInFileAction);
+    }
+
+    // Action to ignore or enable all errors
+    if (this.#diagnosticService.isEnabled()) {
+      const ignoreAllAction = new vscode.CodeAction('Ignore all errors', vscode.CodeActionKind.Empty);
+      ignoreAllAction.command = { command: 'gcode-genius.ignoreAllDiagnostics', title: 'Ignore all errors' };
+      actions.push(ignoreAllAction);
+    } else {
+      const enableAllAction = new vscode.CodeAction('Enable all errors', vscode.CodeActionKind.Empty);
+      enableAllAction.command = { command: 'gcode-genius.enableAllDiagnostics', title: 'Enable all errors' };
+      actions.push(enableAllAction);
     }
 
     return actions;

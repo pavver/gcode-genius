@@ -24,9 +24,24 @@ export function activate(context, documentStateManager, gcodeDatabase) {
   context.subscriptions.push(...editorManager.listen());
 
   // 4. Register providers
-  const codeActionProvider = new CodeActionProvider(languageService);
+  const codeActionProvider = new CodeActionProvider(languageService, diagnosticService);
   context.subscriptions.push(
     vscode.languages.registerCodeActionsProvider('gcode', codeActionProvider)
+  );
+
+  // 5. Register commands
+  context.subscriptions.push(
+    vscode.commands.registerCommand('gcode-genius.ignoreAllDiagnostics', () => {
+      diagnosticService.setEnabled(false);
+      diagnosticService.revalidate();
+    })
+  );
+
+  context.subscriptions.push(
+    vscode.commands.registerCommand('gcode-genius.enableAllDiagnostics', () => {
+      diagnosticService.setEnabled(true);
+      diagnosticService.revalidate();
+    })
   );
 
   console.log('G-Code editor integration activated.');
