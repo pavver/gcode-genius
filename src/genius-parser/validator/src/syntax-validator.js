@@ -39,7 +39,15 @@ export function validateSyntax(tokens) {
     const currentTokenEnd = currentToken.startOffset + getTokenLength(currentToken);
     const spaceBetween = nextToken.startOffset - currentTokenEnd;
 
-    if (i === tokens.length - 2 && nextToken.type === 'COMMENT') {
+    const areConsecutiveFlags = 
+      currentToken.type === 'PARAMETER' && currentToken.value === null &&
+      nextToken.type === 'PARAMETER' && nextToken.value === null;
+
+    if (areConsecutiveFlags) {
+      if (spaceBetween > 1) {
+        diagnostics.push(new Diagnostic(Severity.Warning, 'warning.invalid_spacing_between_flags', currentTokenEnd, nextToken.startOffset));
+      }
+    } else if (i === tokens.length - 2 && nextToken.type === 'COMMENT') {
       if (spaceBetween < 1) {
         diagnostics.push(new Diagnostic(Severity.Warning, 'warning.invalid_spacing_before_comment', currentTokenEnd, nextToken.startOffset));
       }

@@ -18,7 +18,7 @@ export default function tokenize(line) {
     lineNumber: /^N\d+/i,
     command: /^[GMT]\d*\.?\d+/i,
     parameterWithValue: /^[A-Z][-+]?(?:\d+\.?\d*|\.\d+)/i,
-    word: /^[A-Z]{2,}/i, // New pattern for multi-letter words
+    word: /^[A-Z]{2,}/i,
     parameterAsFlag: /^[A-Z]/i
   };
 
