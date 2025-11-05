@@ -45,5 +45,7 @@ export function activate(context, documentStateManager, gcodeDatabase) {
   );
 
   console.log('G-Code editor integration activated.');
-}
 
+  return { languageService, diagnosticService, documentStateManager };
+
+}

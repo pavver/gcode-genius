@@ -6,7 +6,6 @@ const { parseGcode, reparseFromLine } = require('./src/gcode-parser');
 const THREE = require('three');
 const { applyMove } = require('./src/transformations/move');
 const { applyRotation } = require('./src/transformations/rotate');
-const { formatGCode } = require('./src/gcode-formatter');
 const vscodeEditorIntegration = require('./src/vscode-editor-integration');
 const { DocumentStateManager } = require('./src/genius-parser/document-state-manager/src/index.js');
 const tokenize = require('./src/genius-parser/tokenizer/src/index.js').default;
@@ -412,7 +411,9 @@ function activate(context) {
     const gcodeDatabasePath = path.join(context.extensionPath, 'src', 'genius-parser', 'gcode-database.json');
     const gcodeDatabaseJson = fs.readFileSync(gcodeDatabasePath, 'utf8');
     const gcodeDatabase = JSON.parse(gcodeDatabaseJson);
-    vscodeEditorIntegration.activate(context, documentStateManager, gcodeDatabase);
+    const integration = vscodeEditorIntegration.activate(context, documentStateManager, gcodeDatabase);
+    const languageService = integration.languageService;
+    const diagnosticService = integration.diagnosticService;
 
     // Activate the dynamic highlighter
     gcodeHighlighter.activate();
@@ -522,12 +523,52 @@ function activate(context) {
     // Register the G-code formatting provider
     const formattingProvider = {
         provideDocumentFormattingEdits(document) {
-            const formattedText = formatGCode(document.getText());
-            const fullRange = new vscode.Range(
-                document.positionAt(0),
-                document.positionAt(document.getText().length)
-            );
-            return [vscode.TextEdit.replace(fullRange, formattedText)];
+            let allFixableDiags = [];
+
+            if (diagnosticService.isEnabled()) {
+                allFixableDiags = vscode.languages.getDiagnostics(document.uri)
+                    .filter(d => d.errorData && languageService.canFix(d.errorData))
+                    .map(d => ({ ...d.errorData, line: d.range.start.line })); // Add line number
+            } else {
+                // If diagnostics are disabled, we need to manually validate the file
+                const documentState = documentStateManager.getDocumentState(document.uri.fsPath);
+                if (documentState) {
+                    for (let i = 0; i < documentState.lines.length; i++) {
+                        const lineTokens = documentState.lines[i];
+                        const errors = languageService.getSyntaxDiagnostics(lineTokens);
+                        const fixableErrors = errors
+                            .filter(e => languageService.canFix(e))
+                            .map(e => ({ ...e, line: i })); // Add line number to each error
+                        allFixableDiags.push(...fixableErrors);
+                    }
+                }
+            }
+
+            if (allFixableDiags.length === 0) {
+                return []; // No fixable errors found
+            }
+
+            const editsByLine = new Map();
+            for (const diag of allFixableDiags) {
+                const lineNum = diag.line;
+                if (!editsByLine.has(lineNum)) {
+                    editsByLine.set(lineNum, []);
+                }
+                editsByLine.get(lineNum).push(diag);
+            }
+
+            const textEdits = [];
+            for (const [lineNum, lineDiags] of editsByLine.entries()) {
+                const line = document.lineAt(lineNum);
+                const fixedLine = languageService.getFixAll(lineDiags, line.text);
+                
+                // Check if the line content actually changed to avoid unnecessary edits
+                if (fixedLine !== line.text) {
+                    textEdits.push(vscode.TextEdit.replace(line.range, fixedLine));
+                }
+            }
+
+            return textEdits;
         }
     };
 
