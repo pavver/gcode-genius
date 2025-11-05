@@ -23,7 +23,13 @@ export class CodeActionProvider {
         fixAction.edit = new vscode.WorkspaceEdit();
         const line = document.lineAt(diagnostic.range.start.line);
         const fixedLine = this.#languageService.getFix(diagnostic.errorData, line.text);
-        fixAction.edit.replace(document.uri, line.range, fixedLine);
+        if (fixedLine.includes('\n')) {
+          const lines = fixedLine.split('\n');
+          fixAction.edit.delete(document.uri, line.range);
+          fixAction.edit.insert(document.uri, line.range.start, lines.join('\n'));
+        } else {
+          fixAction.edit.replace(document.uri, line.range, fixedLine);
+        }
         fixAction.diagnostics = [diagnostic];
         fixAction.isPreferred = true;
         actions.push(fixAction);
@@ -31,18 +37,21 @@ export class CodeActionProvider {
     }
 
     // Action to fix all errors of the same type
-    const fixableDiagnostics = diagnostics.filter(d => d.errorData && this.#languageService.canFix(d.errorData));
-    const diagnosticsByType = new Map();
+    const allFixableDiagsInFile = vscode.languages.getDiagnostics(document.uri)
+        .filter(d => d.errorData && this.#languageService.canFix(d.errorData));
 
-    for (const diagnostic of fixableDiagnostics) {
+    const diagnosticsByType = new Map();
+    for (const diagnostic of allFixableDiagsInFile) {
       if (!diagnosticsByType.has(diagnostic.message)) {
         diagnosticsByType.set(diagnostic.message, []);
       }
       diagnosticsByType.get(diagnostic.message).push(diagnostic);
     }
 
+    const currentDiagnosticMessages = new Set(context.diagnostics.map(d => d.message));
+
     for (const [message, diags] of diagnosticsByType.entries()) {
-      if (diags.length > 1) {
+      if (diags.length > 1 && currentDiagnosticMessages.has(message)) {
         const fixAllTypeAction = new vscode.CodeAction(`Fix all '${message}' issues`, vscode.CodeActionKind.QuickFix);
         fixAllTypeAction.edit = new vscode.WorkspaceEdit();
         const editsByLine = new Map();
@@ -58,7 +67,13 @@ export class CodeActionProvider {
         for (const [lineNum, lineDiags] of editsByLine.entries()) {
           const line = document.lineAt(lineNum);
           const fixedLine = this.#languageService.getFixAll(lineDiags, line.text);
-          fixAllTypeAction.edit.replace(document.uri, line.range, fixedLine);
+          if (fixedLine.includes('\n')) {
+            const lines = fixedLine.split('\n');
+            fixAllTypeAction.edit.delete(document.uri, line.range);
+            fixAllTypeAction.edit.insert(document.uri, line.range.start, lines.join('\n'));
+          } else {
+            fixAllTypeAction.edit.replace(document.uri, line.range, fixedLine);
+          }
         }
 
         fixAllTypeAction.diagnostics = diags;
@@ -86,7 +101,13 @@ export class CodeActionProvider {
       for (const [lineNum, lineDiags] of editsByLine.entries()) {
         const line = document.lineAt(lineNum);
         const fixedLine = this.#languageService.getFixAll(lineDiags, line.text);
-        fixAllInFileAction.edit.replace(document.uri, line.range, fixedLine);
+        if (fixedLine.includes('\n')) {
+          const lines = fixedLine.split('\n');
+          fixAllInFileAction.edit.delete(document.uri, line.range);
+          fixAllInFileAction.edit.insert(document.uri, line.range.start, lines.join('\n'));
+        } else {
+          fixAllInFileAction.edit.replace(document.uri, line.range, fixedLine);
+        }
       }
 
       fixAllInFileAction.diagnostics = allFixableDiags;

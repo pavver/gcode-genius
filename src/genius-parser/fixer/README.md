@@ -39,7 +39,8 @@ This function takes a raw G-code line and a single diagnostic object and returns
 -   `warning.missing_trailing_zero`: Adds a trailing zero to numbers that end with a decimal point (e.g., `1.` becomes `1.0`).
 -   `warning.invalid_spacing_before_comment`: Ensures there is at least one space before a comment.
 -   `warning.invalid_spacing_between_flags`: Ensures there is exactly one space between consecutive flags.
--   `warning.comma_as_decimal_separator`: Replaces a comma used as a decimal separator with a period.
+-   `error.comma_as_decimal_separator`: Replaces a comma used as a decimal separator with a period.
+-   `warning.multiple_commands_on_line`: Splits a line with multiple commands into separate lines, with one command per line.
 
 ### `fixAllErrors(gcodeLine, diagnostics)`
 

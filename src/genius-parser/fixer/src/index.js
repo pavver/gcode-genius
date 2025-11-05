@@ -9,7 +9,8 @@ const fixableErrors = new Set([
   'warning.missing_trailing_zero',
   'warning.invalid_spacing_before_comment',
   'warning.invalid_spacing_between_flags',
-  'warning.comma_as_decimal_separator',
+  'error.comma_as_decimal_separator',
+  'warning.multiple_commands_on_line',
 ]);
 
 /**
@@ -36,6 +37,10 @@ function fixError(gcodeLine, diagnostic) {
 
   switch (message) {
     case 'warning.invalid_spacing_between_tokens':
+      // If we are about to insert a space right before a newline, don't do it.
+      if (gcodeLine.charAt(start) === '\n') {
+        return gcodeLine;
+      }
       return gcodeLine.slice(0, start) + ' ' + gcodeLine.slice(end);
     case 'warning.lowercase_letter':
       return gcodeLine.slice(0, start) + gcodeLine.slice(start, end).toUpperCase() + gcodeLine.slice(end);
@@ -52,8 +57,14 @@ function fixError(gcodeLine, diagnostic) {
       return gcodeLine.slice(0, start) + ' ' + gcodeLine.slice(start);
     case 'warning.invalid_spacing_between_flags':
       return gcodeLine.slice(0, start) + ' ' + gcodeLine.slice(end);
-    case 'warning.comma_as_decimal_separator':
+    case 'error.comma_as_decimal_separator':
       return gcodeLine.slice(0, start) + '.' + gcodeLine.slice(end);
+    case 'warning.multiple_commands_on_line': {
+      const lineSoFar = gcodeLine.slice(0, start);
+      const trimmedLineSoFar = lineSoFar.trimEnd(); // Removes space added by other fix
+      const restOfLine = gcodeLine.slice(start).trimStart(); // Just in case
+      return trimmedLineSoFar + '\n' + restOfLine;
+    }
     default:
       return gcodeLine;
   }

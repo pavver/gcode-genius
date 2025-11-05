@@ -10,6 +10,17 @@ function getTokenLength(token) {
 
 export function validateSyntax(tokens) {
   const diagnostics = [];
+  let commandCount = 0;
+
+  // Rule: Multiple commands on one line
+  for (const token of tokens) {
+    if (token.type === 'COMMAND') {
+      commandCount++;
+      if (commandCount > 1) {
+        diagnostics.push(new Diagnostic(Severity.Warning, 'warning.multiple_commands_on_line', token.startOffset, token.startOffset + getTokenLength(token)));
+      }
+    }
+  }
 
   // Rule 1: Spacing Check
   for (let i = 0; i < tokens.length - 1; i++) {
@@ -60,7 +71,7 @@ export function validateSyntax(tokens) {
     if (hasComma) {
         const commaIndex = token.value.indexOf(',');
         const startPos = token.startOffset + letterOffset + commaIndex;
-        diagnostics.push(new Diagnostic(Severity.Warning, 'warning.comma_as_decimal_separator', startPos, startPos + 1));
+        diagnostics.push(new Diagnostic(Severity.Error, 'error.comma_as_decimal_separator', startPos, startPos + 1));
     }
 
     if (!hasDecimal && !hasComma) {
