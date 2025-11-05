@@ -52,6 +52,7 @@ The syntax validator inspects an array of tokens from the `Tokenizer`. It does n
     -   **Missing Trailing Zero**: Flags if a number ends with a decimal point but lacks a trailing zero (e.g., `1.` should be `1.0`).
     -   **Extra Leading Zeros**: Flags extra leading zeros in the integer part (e.g., `00.5` should be `0.5`).
     -   **Extra Trailing Zeros**: Flags extra trailing zeros in the fractional part (e.g., `1.20` should be `1.2`, `1.00` should be `1.0`).
+-   **Comma as Decimal Separator**: Flags if a comma is used as a decimal separator (e.g., `X1,5` should be `X1.5`).
 -   **Error Tokens**: Identifies any tokens that the tokenizer marked as `ERROR`.
 
 ### Usage Example:

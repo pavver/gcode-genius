@@ -52,6 +52,7 @@ The regular expression for numbers is designed to be flexible and supports sever
 - Floats (`10.5`)
 - Numbers with a trailing dot (`10.`)
 - Numbers with a leading dot (`.5`)
+- Commas as decimal separators (`10,5`)
 
 ### Output Token Structure
 
@@ -83,7 +84,7 @@ The `example/tokenize.js` script demonstrates how to use the tokenizer.
 ```javascript
 import tokenize from './src/index.js';
 
-const line = 'N10 G0 X1. Y.5 ; move to position';
+const line = 'N10 G0 X1. Y.5 Z10,5 ; move to position';
 const tokens = tokenize(line);
 
 console.log(JSON.stringify(tokens, null, 2));
@@ -117,10 +118,16 @@ This would produce the following output:
     "startOffset": 11
   },
   {
+    "type": "PARAMETER",
+    "letter": "Z",
+    "value": "10,5",
+    "startOffset": 15
+  },
+  {
     "type": "COMMENT",
     "letter": null,
     "value": "; move to position",
-    "startOffset": 15
+    "startOffset": 21
   }
 ]
 ```

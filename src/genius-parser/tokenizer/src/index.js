@@ -17,7 +17,7 @@ export default function tokenize(line) {
     commentParen: /^\(.*?\)/,
     lineNumber: /^N\d+/i,
     command: /^[GMT]\d*\.?\d+/i,
-    parameterWithValue: /^[A-Z][-+]?(?:\d+\.?\d*|\.\d+)/i,
+    parameterWithValue: /^[A-Z][-+]?(?:\d+[.,]?\d*|[.,]\d*)/i,
     word: /^[A-Z]{2,}/i,
     parameterAsFlag: /^[A-Z]/i
   };

@@ -9,6 +9,7 @@ const fixableErrors = new Set([
   'warning.missing_trailing_zero',
   'warning.invalid_spacing_before_comment',
   'warning.invalid_spacing_between_flags',
+  'warning.comma_as_decimal_separator',
 ]);
 
 /**
@@ -51,6 +52,8 @@ function fixError(gcodeLine, diagnostic) {
       return gcodeLine.slice(0, start) + ' ' + gcodeLine.slice(start);
     case 'warning.invalid_spacing_between_flags':
       return gcodeLine.slice(0, start) + ' ' + gcodeLine.slice(end);
+    case 'warning.comma_as_decimal_separator':
+      return gcodeLine.slice(0, start) + '.' + gcodeLine.slice(end);
     default:
       return gcodeLine;
   }

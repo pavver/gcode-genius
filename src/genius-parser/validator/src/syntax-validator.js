@@ -54,9 +54,16 @@ export function validateSyntax(tokens) {
 
     const isCommand = token.type === 'COMMAND';
     const hasDecimal = token.value.includes('.');
+    const hasComma = token.value.includes(',');
     const letterOffset = token.letter ? token.letter.length : 0;
 
-    if (!hasDecimal) {
+    if (hasComma) {
+        const commaIndex = token.value.indexOf(',');
+        const startPos = token.startOffset + letterOffset + commaIndex;
+        diagnostics.push(new Diagnostic(Severity.Warning, 'warning.comma_as_decimal_separator', startPos, startPos + 1));
+    }
+
+    if (!hasDecimal && !hasComma) {
       // Rule 3: Leading Zeros (Integers)
       if (token.value.length > 1 && token.value.startsWith('0')) {
         const firstDigitMatch = /[1-9]/.exec(token.value);
@@ -71,7 +78,7 @@ export function validateSyntax(tokens) {
       }
     } else {
       // Rule 4: Floating Point Zeros
-      const parts = token.value.split('.');
+      const parts = token.value.replace(',', '.').split('.');
       const integerPart = parts[0];
       const fractionalPart = parts[1];
 
@@ -80,7 +87,8 @@ export function validateSyntax(tokens) {
       }
 
       if (fractionalPart.length === 0) {
-        diagnostics.push(new Diagnostic(Severity.Warning, 'warning.missing_trailing_zero', token.startOffset + letterOffset + (integerPart.length || 0), token.startOffset + letterOffset + (integerPart.length || 0) + 1));
+        const startPos = token.startOffset + getTokenLength(token);
+        diagnostics.push(new Diagnostic(Severity.Warning, 'warning.missing_trailing_zero', startPos, startPos));
       }
 
       if (integerPart.length > 1 && integerPart.startsWith('0')) {
