@@ -2,6 +2,22 @@
 
 All notable changes to the "gcode-genius" extension will be documented in this file.
 
+## [0.1.5] - 2025-11-06
+
+### Added
+
+- **New Modular Parsing System**: Began the implementation of a new, more robust parsing system. This version introduces the core modules for tokenization, validation, and error fixing.
+- **Real-time Syntax Validation**: The new parser provides real-time syntax validation, highlighting errors as you type.
+- **Quick Fixes for Syntax Errors**: Implemented quick fixes for a wide range of common syntax errors, allowing for rapid correction of issues directly in the editor.
+
+### Changed
+
+- **Error Highlighting and Correction**: Replaced the old error detection and correction system with the new modular parsing engine. This provides more accurate and detailed error information and more reliable fixes.
+
+### Removed
+
+- **Old Error Correction System**: The previous, less-efficient error correction logic has been completely removed in favor of the new modular system.
+
 ## [0.1.0] - Initial Release
 
 This is the first public release of G-code Genius. It combines all features developed and refined over previous internal versions into a single, comprehensive toolkit for G-code editing and visualization.
