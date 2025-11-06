@@ -39,6 +39,7 @@ The syntax validator inspects an array of tokens from the `Tokenizer`. It does n
 -   **Function:** `validateSyntax(tokens)`
 
 ### Checks Performed:
+-   **Leading/Trailing Whitespace**: Flags any whitespace at the beginning or end of a line.
 -   **Spacing Between Tokens**:
     -   Ensures there is exactly one space between most tokens.
     -   For consecutive parameter flags (e.g., `X`, `Y`, `Z`), allows a space of `0` or `1`. An error is flagged only if the space is greater than `1`. This allows for both `G0 XYZ` and `G0 X Y Z`.

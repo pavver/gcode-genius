@@ -41,6 +41,8 @@ This function takes a raw G-code line and a single diagnostic object and returns
 -   `warning.invalid_spacing_between_flags`: Ensures there is exactly one space between consecutive flags.
 -   `error.comma_as_decimal_separator`: Replaces a comma used as a decimal separator with a period.
 -   `warning.multiple_commands_on_line`: Splits a line with multiple commands into separate lines, with one command per line.
+-   `warning.leading_whitespace`: Removes whitespace from the beginning of a line.
+-   `warning.trailing_whitespace`: Removes whitespace from the end of a line.
 
 ### `fixAllErrors(gcodeLine, diagnostics)`
 

@@ -44,6 +44,7 @@ This logic prevents a cascade of "missing space" errors from the validator and p
     -   Can be a "flag" with a `null` value. A flag must be one of the valid characters (`X, Y, Z, O`).
 -   **`COMMENT`**: A comment, either starting with `;` or enclosed in `()`.
 -   **`ERROR`**: Any part of the string that doesn't match the above patterns, including invalid words.
+-   **`TRAILING_WHITESPACE`**: Trailing whitespace at the end of a line.
 
 ### Number Formatting
 

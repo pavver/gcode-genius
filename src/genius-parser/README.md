@@ -18,8 +18,9 @@ The library is designed to be used as a sequence of processing stages:
 
 1.  **Tokenization:** A raw line of G-code text is converted into an array of `Token` objects.
 2.  **Syntax Validation:** The array of tokens is passed to the `Syntax Validator` to check for lexical correctness (spacing, formatting, valid characters, etc.).
-3.  **(Future) Parsing:** The validated tokens are passed to a `Parser` which will be responsible for converting the flat array of tokens into structured `Command` objects.
-4.  **(Future) Semantic Validation:** The structured `Command` objects are passed to the `Semantic Validator` to be checked against a G-code database for logical correctness (e.g., correct parameter usage for a given command).
+3.  **Fixing:** The raw G-code line and the generated diagnostics are passed to the `Fixer` to automatically correct any fixable errors.
+4.  **(Future) Parsing:** The validated tokens are passed to a `Parser` which will be responsible for converting the flat array of tokens into structured `Command` objects.
+5.  **(Future) Semantic Validation:** The structured `Command` objects are passed to the `Semantic Validator` to be checked against a G-code database for logical correctness (e.g., correct parameter usage for a given command).
 
 ## Components
 
@@ -40,6 +41,11 @@ The validation process is split into two independent modules:
 -   **Purpose:** Analyzes a fully parsed `Command` object to ensure it is logically valid according to a specific G-code dialect (defined in a database).
 -   **Details:** See the [Validator README](./validator/README.md).
 
+### 3. Fixer (`/fixer`)
+
+-   **Purpose:** Automatically corrects syntax errors based on the diagnostics from the `Syntax Validator`.
+-   **Details:** For more information, see the [Fixer README](./fixer/README.md).
+
 *(Other components like `state-manager`, `motion-calculator`, etc. will be described here as they are refactored.)*
 
 ## Basic Usage Example
@@ -49,10 +55,9 @@ This example demonstrates the intended workflow using the decoupled components.
 ```javascript
 import tokenize from './tokenizer/src/index.js';
 import { validateSyntax } from './validator/src/syntax-validator.js';
-// import { SemanticValidator } from './validator/src/semantic-validator.js';
-// import { GCodeParser } from './parser/src/index.js'; // Assuming a future parser
+import { fixAllErrors } from './fixer/src/index.js';
 
-const gcodeLine = 'N10 G01 X1.00 Y.5 ; Move command';
+const gcodeLine = 'N10 g01 X1.00 Y.5 ; Move command';
 
 // 1. Tokenize the line
 const tokens = tokenize(gcodeLine);
@@ -60,16 +65,13 @@ const tokens = tokenize(gcodeLine);
 
 // 2. Run Syntax Validation
 const syntaxDiagnostics = validateSyntax(tokens);
-// -> [ {severity: 'warning', message: 'warning.extra_zero_in_command', ...}, ... ]
+// -> [ {severity: 'warning', message: 'warning.lowercase_letter', ...}, ... ]
 
-// 3. (Future) Parse tokens into a command object
-// const command = GCodeParser.parse(tokens);
+// 3. Fix all fixable errors
+const fixedGcodeLine = fixAllErrors(gcodeLine, syntaxDiagnostics);
+// -> "N10 G1 X1.0 Y0.5 ; Move command"
 
-// 4. (Future) Run Semantic Validation
-// const semanticValidator = new SemanticValidator(gcodeDatabase);
-// const semanticDiagnostics = semanticValidator.validate(command);
-
-// Combine and use diagnostics...
+// (Future steps: Parse, Semantic Validation, etc.)
 ```
 
 ## Testing
