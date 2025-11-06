@@ -1,6 +1,7 @@
 'use strict';
 
 const path = require('path');
+const CopyPlugin = require('copy-webpack-plugin');
 
 /**@type {import('webpack').Configuration}*/
 const config = {
@@ -22,6 +23,13 @@ const config = {
     // support reading TypeScript and JavaScript files, 📖 -> https://github.com/TypeStrong/ts-loader
     extensions: ['.js']
   },
+  plugins: [
+    new CopyPlugin({
+      patterns: [
+        { from: 'src/genius-parser/gcode-database.json', to: 'gcode-database.json' }
+      ]
+    })
+  ],
   devtool: 'nosources-source-map',
   infrastructureLogging: {
     level: "log", // enables logging required for problem matchers

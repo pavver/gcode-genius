@@ -1,7 +1,10 @@
-.vscode/**
-.vscode-test/**
+.vscode/
+.vscode-test/
+.github/
 .gitignore
 webpack.config.js
 *.vsix
 node_modules/
+src/
+example/
 media/readme/

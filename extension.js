@@ -408,7 +408,7 @@ function activate(context) {
     // Activate vscode-editor-integration
     const documentStateManager = new DocumentStateManager(tokenize);
 
-    const gcodeDatabasePath = path.join(context.extensionPath, 'src', 'genius-parser', 'gcode-database.json');
+    const gcodeDatabasePath = path.join(context.extensionPath, 'dist', 'gcode-database.json');
     const gcodeDatabaseJson = fs.readFileSync(gcodeDatabasePath, 'utf8');
     const gcodeDatabase = JSON.parse(gcodeDatabaseJson);
     const integration = vscodeEditorIntegration.activate(context, documentStateManager, gcodeDatabase);

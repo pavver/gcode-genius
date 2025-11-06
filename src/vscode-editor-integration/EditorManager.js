@@ -16,7 +16,7 @@ export class EditorManager {
   listen() {
     const openSubscription = vscode.workspace.onDidOpenTextDocument(document => {
       if (document.languageId === 'gcode') {
-        console.log(`[EditorManager] Detected opening of gcode file: ${document.uri.fsPath}`);
+        //console.log(`[EditorManager] Detected opening of gcode file: ${document.uri.fsPath}`);
         this.#documentStateManager.openFile(document.uri.fsPath, document.getText());
       }
     });

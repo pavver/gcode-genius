@@ -41,7 +41,7 @@ export class DiagnosticService {
     this.#documentStateManager = documentStateManager;
     const validate = ({ filePath }) => {
       if (!this.#enabled) return;
-      console.log(`[DiagnosticService] Received event for: ${filePath}`);
+      //console.log(`[DiagnosticService] Received event for: ${filePath}`);
       const documentState = documentStateManager.getDocumentState(filePath);
       if (documentState) {
         this.#validateDocument(filePath, documentState.lines);
@@ -76,7 +76,7 @@ export class DiagnosticService {
         diagnostics.push(diagnostic);
       }
     }
-    console.log(`[DiagnosticService] Reporting ${diagnostics.length} diagnostics for: ${filePath}`);
+    //console.log(`[DiagnosticService] Reporting ${diagnostics.length} diagnostics for: ${filePath}`);
     this.#diagnosticCollection.set(vscode.Uri.file(filePath), diagnostics);
   }
 
