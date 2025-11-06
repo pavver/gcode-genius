@@ -11,6 +11,10 @@ function getTokenLength(token) {
 export function validateSyntax(tokens) {
   const diagnostics = [];
   let commandCount = 0;
+  // Rule: Leading whitespace
+  if (tokens.length > 0 && tokens[0].type !== 'TRAILING_WHITESPACE' && tokens[0].startOffset > 0) {
+    diagnostics.push(new Diagnostic(Severity.Warning, 'warning.leading_whitespace', 0, tokens[0].startOffset));
+  }
 
   // Rule: Multiple commands on one line
   for (const token of tokens) {
@@ -26,6 +30,11 @@ export function validateSyntax(tokens) {
   for (let i = 0; i < tokens.length - 1; i++) {
     const currentToken = tokens[i];
     const nextToken = tokens[i + 1];
+
+    // If nextToken is TRAILING_WHITESPACE, we should skip this spacing check.
+    if (nextToken.type === 'TRAILING_WHITESPACE') {
+        continue; // Don't check spacing before trailing whitespace
+    }
 
     const currentTokenEnd = currentToken.startOffset + getTokenLength(currentToken);
     const spaceBetween = nextToken.startOffset - currentTokenEnd;
@@ -50,11 +59,20 @@ export function validateSyntax(tokens) {
   }
 
   for (const token of tokens) {
+    // Rule: Trailing whitespace
+    if (token.type === 'TRAILING_WHITESPACE') {
+      diagnostics.push(new Diagnostic(Severity.Warning, 'warning.trailing_whitespace', token.startOffset, token.startOffset + token.value.length));
+      continue; // No other checks needed for this token
+    }
+
     // Rule 5: ERROR token
     if (token.type === 'ERROR') {
       diagnostics.push(new Diagnostic(Severity.Error, 'error.wrong_token', token.startOffset, token.startOffset + getTokenLength(token)));
       continue;
     }
+
+    if(token.type === 'COMMENT')
+      continue;
 
     // Rule 2: Uppercase Letter
     if (token.letter && token.letter.toUpperCase() !== token.letter) {
@@ -78,7 +96,13 @@ export function validateSyntax(tokens) {
       // Rule 3: Leading Zeros (Integers)
       if (token.value.length > 1 && token.value.startsWith('0')) {
         const firstDigitMatch = /[1-9]/.exec(token.value);
-        const firstDigitIndex = firstDigitMatch ? firstDigitMatch.index : token.value.length;
+        let firstDigitIndex = firstDigitMatch ? firstDigitMatch.index : token.value.length;
+
+        // If the value is all zeros (like "00"), we want to keep one zero.
+        // So, the "extra" part is all but the last zero.
+        if (!firstDigitMatch && token.value.length > 1) {
+          firstDigitIndex = token.value.length - 1;
+        }
 
         if (firstDigitIndex > 0) {
           const startPos = token.startOffset + letterOffset;

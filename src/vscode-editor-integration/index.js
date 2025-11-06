@@ -26,7 +26,13 @@ export function activate(context, documentStateManager, gcodeDatabase) {
   // 4. Register providers
   const codeActionProvider = new CodeActionProvider(languageService, diagnosticService);
   context.subscriptions.push(
-    vscode.languages.registerCodeActionsProvider('gcode', codeActionProvider)
+    vscode.languages.registerCodeActionsProvider(
+      'gcode',
+      codeActionProvider,
+      {
+        providedCodeActionKinds: [vscode.CodeActionKind.QuickFix, vscode.CodeActionKind.Empty]
+      }
+    )
   );
 
   // 5. Register commands

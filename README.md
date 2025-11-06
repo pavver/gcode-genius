@@ -13,16 +13,31 @@ Stop switching between different programs. Visualize, format, edit, and analyze 
 
 ### 🚀 Intelligent Code Formatting
 
-Bring perfect order to your G-code with a single command. Our formatter does more than just align text; it intelligently optimizes your code for maximum readability and compatibility.
+Bring perfect order to your G-code with a single command. Our formatter now uses the powerful new linting engine to **find and fix all fixable errors** in the entire file.
 
-- **Automatic Command Splitting**: Breaks multiple commands on a single line (e.g., `G1X10Y20G0Z5`) into separate, properly formatted lines.
-- **Standardization & Cleanup**: Automatically converts commands to uppercase, standardizes spacing, and strips trailing zeros (`G01.000` becomes `G1`), making your code clean and professional.
+- **Comprehensive Correction**: Automatically splits multiple commands, standardizes capitalization and spacing, cleans up number formats, and more.
 - **Structure Preservation**: Retains your comments and important empty lines, maintaining the logical structure of the file.
 
 *How to use: Simply open the Command Palette (`Ctrl+Shift+P`) and select "Format Document".*
 
 <!-- Image: "Before" and "After" code formatting comparison -->
 ![G-code Formatter](https://raw.githubusercontent.com/pavver/gcode-genius/refs/heads/master/media/readme/formatter.png)
+
+### 💡 Real-time Code Validation and Quick Fixes
+
+Write cleaner, error-free G-code with our new real-time linter. It continuously analyzes your code and highlights issues as you type.
+
+- **Instant Feedback**: Detects a wide range of common errors, such as:
+    - Incorrect spacing between commands and parameters.
+    - Use of lowercase letters for commands (e.g., `g0` instead of `G0`).
+    - Improper number formatting (e.g., `X.5` instead of `X0.5`, or `G01` instead of `G1`).
+    - Multiple commands on a single line.
+    - Use of commas instead of periods for decimal points.
+- **Flexible Quick Fixes**: Hover over an error and choose how you want to fix it:
+    - **Fix this issue**: Corrects the single selected error.
+    - **Fix all issues of this type**: Applies the same fix to all identical errors in the file.
+    - **Fix all fixable issues in file**: Cleans up the entire document in one go.
+- **Toggle Diagnostics**: You can enable or disable the error checking at any time.
 
 ### 🎨 Dynamic Syntax Highlighting with Guaranteed Readability
 

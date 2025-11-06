@@ -11,6 +11,8 @@ const fixableErrors = new Set([
   'warning.invalid_spacing_between_flags',
   'error.comma_as_decimal_separator',
   'warning.multiple_commands_on_line',
+  'warning.leading_whitespace',
+  'warning.trailing_whitespace',
 ]);
 
 /**
@@ -46,8 +48,9 @@ function fixError(gcodeLine, diagnostic) {
       return gcodeLine.slice(0, start) + gcodeLine.slice(start, end).toUpperCase() + gcodeLine.slice(end);
     case 'warning.leading_zeros_in_parameter':
     case 'warning.extra_zero_in_command':
-      return gcodeLine.slice(0, start) + gcodeLine.slice(end);
     case 'warning.trailing_zeros_in_parameter':
+    case 'warning.leading_whitespace':
+    case 'warning.trailing_whitespace':
         return gcodeLine.slice(0, start) + gcodeLine.slice(end);
     case 'warning.missing_leading_zero':
       return gcodeLine.slice(0, start) + '0' + gcodeLine.slice(start);

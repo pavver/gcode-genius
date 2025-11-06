@@ -102,7 +102,7 @@ export default function tokenize(line) {
         // Create a single error token for the whole word
         tokens.push(new Token('ERROR', null, fullMatch, position));
       }
-      
+
       position += fullMatch.length;
       matched = true;
       continue;
@@ -136,6 +136,22 @@ export default function tokenize(line) {
       const errorStr = line.substring(position, errorEnd);
       tokens.push(new Token('ERROR', null, errorStr, position));
       position = errorEnd;
+    }
+  }
+
+  if (tokens.length === 0 && line.length > 0) {
+    tokens.push(new Token('TRAILING_WHITESPACE', null, line, 0));
+  }
+
+  if (tokens.length > 0) {
+    const lastToken = tokens[tokens.length - 1];
+    const lastTokenEnd = lastToken.startOffset + (lastToken.letter ? lastToken.letter.length : 0) + (lastToken.value ? lastToken.value.length : 0);
+
+    if (lastTokenEnd < line.length) {
+      const trailingWhitespace = line.substring(lastTokenEnd);
+      if (/^\s+$/.test(trailingWhitespace)) {
+        tokens.push(new Token('TRAILING_WHITESPACE', null, trailingWhitespace, lastTokenEnd));
+      }
     }
   }
 
