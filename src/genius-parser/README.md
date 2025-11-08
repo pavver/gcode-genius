@@ -61,6 +61,7 @@ The validation process is split into two independent modules:
     -   **Accessible by Design**: Automatically generates colors that meet WCAG 2.1 contrast standards.
     -   **Semantic Colors**: Assigns colors based on the function of G-code commands (motion, settings, axes).
 -   **Details:** For a full API reference and usage guide, see the [Adaptive Syntax Highlighting README](./code-highlighter/README.md).
+-   **Live Demo:** You can see the color generation in action on our **[live demo page](https://pavver.github.io/gcode-genius/)**.
 
 *(Other components like `state-manager`, `motion-calculator`, etc. will be described here as they are refactored.)*
 

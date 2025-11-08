@@ -53,6 +53,14 @@ console.log('Comment Color:', commentColor);         // e.g., #6a6a6a
 console.log('Program Stop Color:', programStopColor); // e.g., #ff5577
 ```
 
+## Live Demo
+
+You can test the adaptive color generation live on our GitHub Pages demo. This page allows you to change the background color and see how the entire G-code color palette adapts in real-time.
+
+**[➡️ View the Live Demo here](https://pavver.github.io/gcode-genius/)**
+
+**Disclaimer:** Please note that this demo page uses a simplified regular-expression-based parser for demonstration purposes only. Its goal is to showcase the color generation logic, not the accuracy of the G-code parser. As a result, syntax highlighting on the demo page may occasionally differ from the final result in the full VS Code extension.
+
 ## API Reference
 
 All color generation functions take one primary argument:
