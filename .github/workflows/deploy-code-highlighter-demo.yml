@@ -31,12 +31,12 @@ jobs:
 
       - name: Prepare build directory
         run: |
-          mkdir -p ./_site/src/genius-parser/code-highlighter/example
-          cp -r src/genius-parser/code-highlighter/example/* ./_site/src/genius-parser/code-highlighter/example/
-          cp src/genius-parser/code-highlighter/src/index.js ./_site/src/index.js
+          mkdir -p ./_site/src
+          cp -r src/genius-parser/code-highlighter/example/* ./_site/
+          cp src/genius-parser/code-highlighter/src/index.js ./_site/src/
       
       - name: Fix script path in index.html
-        run: sed -i 's|../src/index.js|./src/index.js|g' ./_site/src/genius-parser/code-highlighter/example/index.html
+        run: sed -i 's|../src/index.js|src/index.js|g' ./_site/index.html
 
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v3
