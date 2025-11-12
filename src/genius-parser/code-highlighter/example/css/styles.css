@@ -1,0 +1,263 @@
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  font-family: 'Consolas', 'Monaco', 'Courier New', monospace;
+  padding: 20px;
+  background: #121212;
+  color: #e0e0e0;
+}
+
+.container {
+  max-width: 1400px;
+  margin: 0 auto;
+}
+
+h1 {
+  text-align: center;
+  color: #ffffff;
+  margin-bottom: 10px;
+  font-family: 'Segoe UI', sans-serif;
+}
+
+.subtitle {
+  text-align: center;
+  color: #a0a0a0;
+  margin-bottom: 30px;
+  font-family: 'Segoe UI', sans-serif;
+}
+
+.controls {
+  background: #1e1e1e;
+  padding: 20px;
+  border-radius: 8px;
+  border: 1px solid #333;
+  margin-bottom: 20px;
+}
+
+.control-group {
+  display: flex;
+  align-items: center;
+  gap: 15px;
+  margin-bottom: 15px;
+  flex-wrap: wrap;
+}
+
+.control-group label {
+  font-weight: bold;
+  min-width: 150px;
+  font-family: 'Segoe UI', sans-serif;
+}
+
+input[type="color"] {
+  width: 60px;
+  height: 40px;
+  border: 1px solid #444;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+input[type="text"] {
+  flex: 1;
+  padding: 8px;
+  border: 1px solid #444;
+  border-radius: 4px;
+  font-family: monospace;
+  background-color: #333;
+  color: #e0e0e0;
+}
+
+.preset-buttons {
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+
+.preset-btn {
+  padding: 8px 15px;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 12px;
+  transition: transform 0.1s;
+  font-family: 'Segoe UI', sans-serif;
+}
+
+.preset-btn:hover {
+  transform: scale(1.05);
+}
+
+.preset-btn:active {
+  transform: scale(0.95);
+}
+
+.main-content {
+  display: grid;
+  grid-template-columns: 1fr 350px;
+  gap: 20px;
+}
+
+.editor-panel {
+  background: #1e1e1e;
+  padding: 20px;
+  border-radius: 8px;
+  border: 1px solid #333;
+}
+
+.editor-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 15px;
+  padding-bottom: 10px;
+  border-bottom: 2px solid #333;
+}
+
+.editor-header h2 {
+  font-family: 'Segoe UI', sans-serif;
+  color: #ffffff;
+}
+
+.stats {
+  font-size: 12px;
+  color: #a0a0a0;
+  font-family: 'Segoe UI', sans-serif;
+}
+
+.gcode-editor {
+  padding: 20px;
+  border-radius: 4px;
+  font-size: 16px;
+  line-height: 1.6;
+  overflow-x: auto;
+  min-height: 600px;
+  transition: background-color 0.3s;
+  font-family: "Cascadia Code", "Consolas", "Monaco", monospace;
+}
+
+.gcode-line {
+  white-space: pre;
+  margin: 0;
+  transition: color 0.3s;
+}
+
+.legend-panel {
+  background: #1e1e1e;
+  padding: 0px 20px 20px 20px;
+  border-radius: 8px;
+  border: 1px solid #333;
+  max-height: 800px;
+  overflow-y: auto;
+  scrollbar-width: thin;
+  scrollbar-color: #4a4a4a #1e1e1e;
+}
+
+.legend-panel h2 {
+  font-family: 'Segoe UI', sans-serif;
+  margin: -20px -20px 15px -20px;
+  color: #ffffff;
+  position: sticky;
+  top: 0;
+  background: #1e1e1e;
+  padding: 20px 20px 10px 20px;
+  border-bottom: 2px solid #333;
+  z-index: 1;
+  border-top-left-radius: 8px;
+  border-top-right-radius: 8px;
+}
+
+.legend-item {
+  display: flex;
+  align-items: center;
+  padding: 8px;
+  margin-bottom: 8px;
+  border-radius: 4px;
+  background: #2a2a2a;
+  transition: background 0.2s;
+}
+
+.legend-item:hover {
+  background: #3a3a3a;
+}
+
+.legend-color {
+  width: 30px;
+  height: 20px;
+  border-radius: 3px;
+  margin-right: 10px;
+  border: 1px solid #444;
+  transition: background-color 0.3s;
+}
+
+.legend-info {
+  flex: 1;
+  font-size: 12px;
+}
+
+.legend-name {
+  font-weight: bold;
+  margin-bottom: 2px;
+  font-family: 'Segoe UI', sans-serif;
+}
+
+.legend-desc {
+  color: #a0a0a0;
+  font-size: 11px;
+  font-family: 'Segoe UI', sans-serif;
+}
+
+.contrast-info {
+  font-size: 10px;
+  color: #888;
+  margin-top: 2px;
+}
+
+@media (max-width: 1200px) {
+  .main-content {
+    grid-template-columns: 1fr;
+  }
+
+  .legend-panel {
+    max-height: none;
+  }
+}
+
+.footer {
+  text-align: center;
+  margin-top: 30px;
+  padding: 20px;
+  color: #a0a0a0;
+  font-size: 12px;
+  font-family: 'Segoe UI', sans-serif;
+}
+
+/* Dark Scrollbar for Legend Panel */
+.legend-panel::-webkit-scrollbar,
+#gcodeTextarea::-webkit-scrollbar {
+  width: 12px;
+}
+
+.legend-panel::-webkit-scrollbar-track,
+#gcodeTextarea::-webkit-scrollbar-track {
+  background: #1e1e1e;
+}
+
+.legend-panel::-webkit-scrollbar-thumb,
+#gcodeTextarea::-webkit-scrollbar-thumb {
+  background-color: #4a4a4a;
+  border-radius: 6px;
+  border: 3px solid #1e1e1e;
+}
+
+.legend-panel::-webkit-scrollbar-thumb:hover,
+#gcodeTextarea::-webkit-scrollbar-thumb:hover {
+  background-color: #6a6a6a;
+}
+
+#gcodeTextarea {
+  scrollbar-width: thin;
+  scrollbar-color: #4a4a4a #1e1e1e;
+}

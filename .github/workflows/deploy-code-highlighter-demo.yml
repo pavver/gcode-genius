@@ -6,8 +6,8 @@ on:
     branches:
       - master # Або 'main'
     paths:
-      - 'src/genius-parser/code-highlighter/example/index.html'
-      - 'src/genius-parser/code-highlighter/src/index.js'      
+      - 'src/genius-parser/code-highlighter/example/**'
+      - 'src/genius-parser/code-highlighter/src/index.js'
   workflow_dispatch:
 
 permissions:
@@ -31,12 +31,12 @@ jobs:
 
       - name: Prepare build directory
         run: |
-          mkdir -p ./_site/src
-          cp src/genius-parser/code-highlighter/example/index.html ./_site/index.html
+          mkdir -p ./_site/src/genius-parser/code-highlighter/example
+          cp -r src/genius-parser/code-highlighter/example/* ./_site/src/genius-parser/code-highlighter/example/
           cp src/genius-parser/code-highlighter/src/index.js ./_site/src/index.js
       
       - name: Fix script path in index.html
-        run: sed -i 's|../src/index.js|./src/index.js|g' ./_site/index.html
+        run: sed -i 's|../src/index.js|./src/index.js|g' ./_site/src/genius-parser/code-highlighter/example/index.html
 
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v3

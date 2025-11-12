@@ -1,570 +1,81 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>G-code Syntax Highlighting Demo v2.1 - Fixed</title>
-    <link href='https://fonts.googleapis.com/css?family=Cascadia+Code' rel='stylesheet'>
-    <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
-
-        body {
-            font-family: 'Consolas', 'Monaco', 'Courier New', monospace;
-            padding: 20px;
-            background: #121212;
-            color: #e0e0e0;
-        }
-
-        .container {
-            max-width: 1400px;
-            margin: 0 auto;
-        }
-
-        h1 {
-            text-align: center;
-            color: #ffffff;
-            margin-bottom: 10px;
-            font-family: 'Segoe UI', sans-serif;
-        }
-
-        .subtitle {
-            text-align: center;
-            color: #a0a0a0;
-            margin-bottom: 30px;
-            font-family: 'Segoe UI', sans-serif;
-        }
-
-        .controls {
-            background: #1e1e1e;
-            padding: 20px;
-            border-radius: 8px;
-            border: 1px solid #333;
-            margin-bottom: 20px;
-        }
-
-        .control-group {
-            display: flex;
-            align-items: center;
-            gap: 15px;
-            margin-bottom: 15px;
-            flex-wrap: wrap;
-        }
-
-        .control-group label {
-            font-weight: bold;
-            min-width: 150px;
-            font-family: 'Segoe UI', sans-serif;
-        }
-
-        input[type="color"] {
-            width: 60px;
-            height: 40px;
-            border: 1px solid #444;
-            border-radius: 4px;
-            cursor: pointer;
-        }
-
-        input[type="text"] {
-            flex: 1;
-            padding: 8px;
-            border: 1px solid #444;
-            border-radius: 4px;
-            font-family: monospace;
-            background-color: #333;
-            color: #e0e0e0;
-        }
-
-        .preset-buttons {
-            display: flex;
-            gap: 10px;
-            flex-wrap: wrap;
-        }
-
-        .preset-btn {
-            padding: 8px 15px;
-            border: none;
-            border-radius: 4px;
-            cursor: pointer;
-            font-size: 12px;
-            transition: transform 0.1s;
-            font-family: 'Segoe UI', sans-serif;
-        }
-
-        .preset-btn:hover {
-            transform: scale(1.05);
-        }
-
-        .preset-btn:active {
-            transform: scale(0.95);
-        }
-
-        .main-content {
-            display: grid;
-            grid-template-columns: 1fr 350px;
-            gap: 20px;
-        }
-
-        .editor-panel {
-            background: #1e1e1e;
-            padding: 20px;
-            border-radius: 8px;
-            border: 1px solid #333;
-        }
-
-        .editor-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 15px;
-            padding-bottom: 10px;
-            border-bottom: 2px solid #333;
-        }
-
-        .editor-header h2 {
-            font-family: 'Segoe UI', sans-serif;
-            color: #ffffff;
-        }
-
-        .stats {
-            font-size: 12px;
-            color: #a0a0a0;
-            font-family: 'Segoe UI', sans-serif;
-        }
-
-        .gcode-editor {
-            padding: 20px;
-            border-radius: 4px;
-            font-size: 16px;
-            line-height: 1.6;
-            overflow-x: auto;
-            min-height: 600px;
-            transition: background-color 0.3s;
-            font-family: "Cascadia Code", "Consolas", "Monaco", monospace;
-        }
-
-        .gcode-line {
-            white-space: pre;
-            margin: 0;
-            transition: color 0.3s;
-        }
-
-        .legend-panel {
-            background: #1e1e1e;
-            padding: 0px 20px 20px 20px;
-            border-radius: 8px;
-            border: 1px solid #333;
-            max-height: 800px;
-            overflow-y: auto;
-            scrollbar-width: thin;
-            scrollbar-color: #4a4a4a #1e1e1e;
-        }
-
-        .legend-panel h2 {
-            font-family: 'Segoe UI', sans-serif;
-            margin: -20px -20px 15px -20px;
-            color: #ffffff;
-            position: sticky;
-            top: 0;
-            background: #1e1e1e;
-            padding: 20px 20px 10px 20px;
-            border-bottom: 2px solid #333;
-            z-index: 1;
-            border-top-left-radius: 8px;
-            border-top-right-radius: 8px;
-        }
-
-        .legend-item {
-            display: flex;
-            align-items: center;
-            padding: 8px;
-            margin-bottom: 8px;
-            border-radius: 4px;
-            background: #2a2a2a;
-            transition: background 0.2s;
-        }
-
-        .legend-item:hover {
-            background: #3a3a3a;
-        }
-
-        .legend-color {
-            width: 30px;
-            height: 20px;
-            border-radius: 3px;
-            margin-right: 10px;
-            border: 1px solid #444;
-            transition: background-color 0.3s;
-        }
-
-        .legend-info {
-            flex: 1;
-            font-size: 12px;
-        }
-
-        .legend-name {
-            font-weight: bold;
-            margin-bottom: 2px;
-            font-family: 'Segoe UI', sans-serif;
-        }
-
-        .legend-desc {
-            color: #a0a0a0;
-            font-size: 11px;
-            font-family: 'Segoe UI', sans-serif;
-        }
-
-        .contrast-info {
-            font-size: 10px;
-            color: #888;
-            margin-top: 2px;
-        }
-
-        @media (max-width: 1200px) {
-            .main-content {
-                grid-template-columns: 1fr;
-            }
-
-            .legend-panel {
-                max-height: none;
-            }
-        }
-
-        .footer {
-            text-align: center;
-            margin-top: 30px;
-            padding: 20px;
-            color: #a0a0a0;
-            font-size: 12px;
-            font-family: 'Segoe UI', sans-serif;
-        }
-
-        /* Dark Scrollbar for Legend Panel */
-        .legend-panel::-webkit-scrollbar, #gcodeTextarea::-webkit-scrollbar {
-            width: 12px;
-        }
-
-        .legend-panel::-webkit-scrollbar-track, #gcodeTextarea::-webkit-scrollbar-track {
-            background: #1e1e1e;
-        }
-
-        .legend-panel::-webkit-scrollbar-thumb, #gcodeTextarea::-webkit-scrollbar-thumb {
-            background-color: #4a4a4a;
-            border-radius: 6px;
-            border: 3px solid #1e1e1e;
-        }
-
-        .legend-panel::-webkit-scrollbar-thumb:hover, #gcodeTextarea::-webkit-scrollbar-thumb:hover {
-            background-color: #6a6a6a;
-        }
-
-        #gcodeTextarea {
-            scrollbar-width: thin;
-            scrollbar-color: #4a4a4a #1e1e1e;
-        }
-    </style>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>G-code Syntax Highlighting Demo v2.1 - Fixed</title>
+  <link href='https://fonts.googleapis.com/css?family=Cascadia+Code' rel='stylesheet'>
+  <link rel="stylesheet" href="css/styles.css">
 </head>
+
 <body>
-    <div class="container">
-        <h1>🎨 G-code Genius Syntax Highlighting Quick-test</h1>
-        <div class="controls">
-            <div class="control-group">
-                <label>Background Color:</label>
-                <input type="color" id="bgColorPicker" value="#1e1e1e">
-                <input type="text" id="bgColorText" value="#1e1e1e" placeholder="#1e1e1e">
-            </div>
-            <div class="control-group">
-                <label>Themes:</label>
-                <div class="preset-buttons">
-                    <button class="preset-btn" onclick="applyBackground('#1e1e1e')" style="background-color: #1e1e1e; color: white;">Dark</button>
-                    <button class="preset-btn" onclick="applyBackground('#1f1f1f')" style="background-color: #1f1f1f; color: white;">Dark Modern</button>
-                    <button class="preset-btn" onclick="applyBackground('#ffffff')" style="background-color: #ffffff; color: black; border: 1px solid #ddd;">Light</button>
-                    <button class="preset-btn" onclick="applyBackground('#000000')" style="background-color: #000000; color: white;">High Contrast</button>
-                    <button class="preset-btn" onclick="applyBackground('#272822')" style="background-color: #272822; color: white;">Monokai</button>
-                    <button class="preset-btn" onclick="applyBackground('#fdf6e3')" style="background-color: #fdf6e3; color: black; border: 1px solid #ddd;">Solarized Light</button>
-                    <button class="preset-btn" onclick="applyBackground('#002b36')" style="background-color: #002b36; color: white;">Solarized Dark</button>
-                    <button class="preset-btn" onclick="applyBackground('#390000')" style="background-color: #390000; color: white;">Red</button>
-                    <button class="preset-btn" onclick="applyBackground('#f5f5f5')" style="background-color: #f5f5f5; color: black; border: 1px solid #ddd;">Quiet Light</button>
-                    <button class="preset-btn" onclick="applyBackground('#000c18')" style="background-color: #000c18; color: white;">Abyss</button>
-                    <button class="preset-btn" onclick="applyBackground('#221a0f')" style="background-color: #221a0f; color: white;">Kimbie Dark</button>
-                    <button class="preset-btn" onclick="applyBackground('#002451')" style="background-color: #002451; color: white;">Tomorrow Night Blue</button>
-                </div>
-            </div>
+  <div class="container">
+    <h1>🎨 G-code Genius Syntax Highlighting Quick-test</h1>
+    <div class="controls">
+      <div class="control-group">
+        <label>Background Color:</label>
+        <input type="color" id="bgColorPicker" value="#1e1e1e">
+        <input type="text" id="bgColorText" value="#1e1e1e" placeholder="#1e1e1e">
+      </div>
+      <div class="control-group">
+        <label>Themes:</label>
+        <div class="preset-buttons">
+          <button class="preset-btn" onclick="applyBackground('#1e1e1e')"
+            style="background-color: #1e1e1e; color: white;">Dark</button>
+          <button class="preset-btn" onclick="applyBackground('#1f1f1f')"
+            style="background-color: #1f1f1f; color: white;">Dark Modern</button>
+          <button class="preset-btn" onclick="applyBackground('#ffffff')"
+            style="background-color: #ffffff; color: black; border: 1px solid #ddd;">Light</button>
+          <button class="preset-btn" onclick="applyBackground('#000000')"
+            style="background-color: #000000; color: white;">High Contrast</button>
+          <button class="preset-btn" onclick="applyBackground('#272822')"
+            style="background-color: #272822; color: white;">Monokai</button>
+          <button class="preset-btn" onclick="applyBackground('#fdf6e3')"
+            style="background-color: #fdf6e3; color: black; border: 1px solid #ddd;">Solarized Light</button>
+          <button class="preset-btn" onclick="applyBackground('#002b36')"
+            style="background-color: #002b36; color: white;">Solarized Dark</button>
+          <button class="preset-btn" onclick="applyBackground('#390000')"
+            style="background-color: #390000; color: white;">Red</button>
+          <button class="preset-btn" onclick="applyBackground('#f5f5f5')"
+            style="background-color: #f5f5f5; color: black; border: 1px solid #ddd;">Quiet Light</button>
+          <button class="preset-btn" onclick="applyBackground('#000c18')"
+            style="background-color: #000c18; color: white;">Abyss</button>
+          <button class="preset-btn" onclick="applyBackground('#221a0f')"
+            style="background-color: #221a0f; color: white;">Kimbie Dark</button>
+          <button class="preset-btn" onclick="applyBackground('#002451')"
+            style="background-color: #002451; color: white;">Tomorrow Night Blue</button>
         </div>
-
-        <div class="main-content">
-            <div class="editor-panel">
-                <div class="editor-header">
-                    <h2>G-code Editor</h2>
-                    <button id="toggleModeBtn" class="preset-btn">Edit</button>
-                    <div class="stats">
-                        <span id="statsText">Contrast: -</span>
-                    </div>
-                </div>
-                <textarea id="gcodeTextarea" class="gcode-editor" style="display: none; width: 100%; min-height: 600px; resize: vertical; border: 1px solid #333; background-color: #1e1e1e; color: #e0e0e0;"></textarea>
-                <div class="gcode-editor" id="gcodeEditor"></div>
-            </div>
-
-            <div class="legend-panel">
-                <h2>Category Legend</h2>
-                <div id="legendContainer"></div>
-            </div>
-        </div>
+      </div>
     </div>
 
-    <script src="../src/index.js"></script>
-    <script>
-        // ============ COLOR CATEGORIES ============
+    <div class="main-content">
+      <div class="editor-panel">
+        <div class="editor-header">
+          <h2>G-code Editor</h2>
+          <button id="toggleModeBtn" class="preset-btn">Edit</button>
+          <div class="stats">
+            <span id="statsText">Contrast: -</span>
+          </div>
+        </div>
+        <textarea id="gcodeTextarea" class="gcode-editor"
+          style="display: none; width: 100%; min-height: 600px; resize: vertical; border: 1px solid #333; background-color: #1e1e1e; color: #e0e0e0;"></textarea>
+        <div class="gcode-editor" id="gcodeEditor"></div>
+      </div>
 
-        const colorCategories = [
-            { name: 'G0 (Rapid Motion)', func: 'getG0RapidColor', example: 'G0' },
-            { name: 'G1 (Linear Motion)', func: 'getG1LinearColor', example: 'G1' },
-            { name: 'G2/G3 (Arcs)', func: 'getG2G3ArcColor', example: 'G2, G3' },
-            { name: 'Special Motions', func: 'getSpecialMotionColor', example: 'G4, G28' },
-            { name: 'Coordinate Systems', func: 'getCoordinateSystemColor', example: 'G54, G92' },
-            { name: 'Planes', func: 'getPlaneSelectionColor', example: 'G17, G18, G19' },
-            { name: 'Positioning Modes', func: 'getPositioningModeColor', example: 'G90, G91' },
-            { name: 'Units', func: 'getUnitsColor', example: 'G20, G21' },
-            { name: 'Canned Cycles', func: 'getCannedCyclesColor', example: 'G81, G83' },
-            { name: 'Spindle (Start)', func: 'getSpindleColor', args: [false], example: 'M3, M4' },
-            { name: 'Spindle (Stop)', func: 'getSpindleColor', args: [true], example: 'M5' },
-            { name: 'Coolant (On)', func: 'getCoolantColor', args: [false], example: 'M7, M8' },
-            { name: 'Coolant (Off)', func: 'getCoolantColor', args: [true], example: 'M9' },
-            { name: 'Tool Change', func: 'getToolChangeColor', example: 'M6' },
-            { name: 'Program Stops', func: 'getProgramStopColor', example: 'M0, M1, M2, M30' },
-            { name: 'Temperature', func: 'getTemperatureColor', example: 'M104, M109' },
-            { name: 'Extruder Mode', func: 'getExtruderModeColor', example: 'M82, M83' },
-            { name: 'X-Axis', func: 'getAxisXColor', example: 'X12.3' },
-            { name: 'Y-Axis', func: 'getAxisYColor', example: 'Y-4.5' },
-            { name: 'Z-Axis', func: 'getAxisZColor', example: 'Z100' },
-            { name: 'Rotary Axes (A,B,C)', func: 'getRotaryAxisColor', example: 'A90' },
-            { name: 'E-Axis (Extruder)', func: 'getExtruderAxisColor', example: 'E1.25' },
-            { name: 'Feed Rate (F)', func: 'getFeedRateColor', example: 'F1500' },
-            { name: 'Spindle Speed (S)', func: 'getSpindleSpeedColor', example: 'S1200' },
-            { name: 'Arc Center (I,J,K)', func: 'getArcCenterColor', example: 'I10 J5' },
-            { name: 'Arc Radius (R)', func: 'getRadiusColor', example: 'R20' },
-            { name: 'Tool Number (T)', func: 'getToolNumberColor', example: 'T1' },
-            { name: 'Line Number (N)', func: 'getLineNumberColor', example: 'N10' },
-            { name: 'Numeric Values', func: 'getNumericColor', example: '123, 45.6' },
-            { name: 'Comments', func: 'getCommentColor', example: '(text), ; text' },
-            { name: 'Warnings', func: 'getWarningCommentColor', example: '(WARNING: ...)' }
-        ];
+      <div class="legend-panel">
+        <h2>Category Legend</h2>
+        <div id="legendContainer"></div>
+      </div>
+    </div>
+  </div>
 
-        // ============ G-CODE EXAMPLE ============
+  <script src="../src/index.js"></script>
 
-        const gcodeExample = `(====================================)
-(  G-code Demo - All Categories     )
-(  Version 2.2 - Refactored         )
-(====================================)
-
-(WARNING: This is a demonstration file!)
-
-N10 G21 G90 G17 (Units, Abs, Plane)
-N20 G54 (Work coordinate system 1)
-N30 T1 M6 (Tool change)
-N40 M3 S1200 (Spindle on)
-
-(Rapid positioning)
-G0 X0 Y0 Z10
-
-(Coolant on)
-M8
-
-(Linear & Arc moves)
-G1 Z-2 F200
-G1 X50 A90 F1500
-G1 Y50
-G2 X70 Y70 I10 J0 F800
-G3 X50 Y50 R20
-
-(Special commands & Cycles)
-G4 P500 (Dwell 500ms)
-G81 X10 Y10 Z-5 R2 F100
-M9 (Coolant off)
-
-(3D Printing specific)
-M104 S200 (Set hotend temperature)
-M82 (Absolute E mode)
-G1 X100 Y100 E15.5 F3000
-
-(Return home & End)
-G28 X Y
-M5
-M30`;
-
-        // ============ UPDATE FUNCTIONS (v2.2) ============
-
-        let currentColors = {};
-
-        function updateColors(bgColor) {
-            currentColors = {};
-            colorCategories.forEach(cat => {
-                const func = GcodeColorUtils[cat.func];
-                if (func) {
-                    const args = cat.args ? [bgColor, ...cat.args] : [bgColor];
-                    currentColors[cat.name] = func(...args);
-                }
-            });
-
-            const code = document.getElementById('gcodeTextarea').value;
-            renderGcode(bgColor, code);
-            renderLegend(bgColor);
-        }
-
-        function escapeHtml(text) {
-            const div = document.createElement('div');
-            div.textContent = text;
-            return div.innerHTML;
-        }
-
-        function renderGcode(bgColor, code) {
-            const editor = document.getElementById('gcodeEditor');
-            editor.style.backgroundColor = bgColor;
-
-            const lines = code.split('\n');
-            const html = lines.map(line => {
-                if (line.trim() === '') {
-                    return '<div class="gcode-line">&nbsp;</div>';
-                }
-
-                // Handle full-line warnings first, as they have top priority
-                if (line.includes('WARNING') || line.includes('DANGER')) {
-                    return `<div class="gcode-line"><span style="color: ${currentColors['Warnings']}; font-weight: bold;">${escapeHtml(line)}</span></div>`;
-                }
-
-                const comments = [];
-                // Step 1: Extract comments and replace with placeholders
-                let processedLine = escapeHtml(line).replace(/(\(.*?\)|;.*)/g, (match) => {
-                    comments.push(match);
-                    return `__COMMENT_${comments.length - 1}__`;
-                });
-
-                // Step 2: Apply all other syntax highlighting to the line without comments
-                let styledLine = processedLine;
-
-                styledLine = styledLine.replace(/\b(G0)\b/g, `<span style="color: ${currentColors['G0 (Rapid Motion)']};">$1</span>`);
-                styledLine = styledLine.replace(/\b(G1)\b/g, `<span style="color: ${currentColors['G1 (Linear Motion)']};">$1</span>`);
-                styledLine = styledLine.replace(/\b(G[23])\b/g, `<span style="color: ${currentColors['G2/G3 (Arcs)']};">$1</span>`);
-                styledLine = styledLine.replace(/\b(G(?:4|28|29|30|53))\b/g, `<span style="color: ${currentColors['Special Motions']};">$1</span>`);
-                styledLine = styledLine.replace(/\b(G(?:5[4-9]|92))\b/g, `<span style="color: ${currentColors['Coordinate Systems']};">$1</span>`);
-                styledLine = styledLine.replace(/\b(G1[7-9])\b/g, `<span style="color: ${currentColors['Planes']};">$1</span>`);
-                styledLine = styledLine.replace(/\b(G9[01])\b/g, `<span style="color: ${currentColors['Positioning Modes']}; font-weight: bold;">$1</span>`);
-                styledLine = styledLine.replace(/\b(G2[01])\b/g, `<span style="color: ${currentColors['Units']}; font-weight: bold;">$1</span>`);
-                styledLine = styledLine.replace(/\b(G8[0-9])\b/g, `<span style="color: ${currentColors['Canned Cycles']};">$1</span>`);
-
-                styledLine = styledLine.replace(/\b(M[34])\b/g, `<span style="color: ${currentColors['Spindle (Start)']};">$1</span>`);
-                styledLine = styledLine.replace(/\b(M5)\b/g, `<span style="color: ${currentColors['Spindle (Stop)']};">$1</span>`);
-                styledLine = styledLine.replace(/\b(M[78])\b/g, `<span style="color: ${currentColors['Coolant (On)']};">$1</span>`);
-                styledLine = styledLine.replace(/\b(M9)\b/g, `<span style="color: ${currentColors['Coolant (Off)']};">$1</span>`);
-                styledLine = styledLine.replace(/\b(M6)\b/g, `<span style="color: ${currentColors['Tool Change']}; font-weight: bold;">$1</span>`);
-                styledLine = styledLine.replace(/\b(M[012]|M30)\b/g, `<span style="color: ${currentColors['Program Stops']}; font-weight: bold;">$1</span>`);
-                styledLine = styledLine.replace(/\b(M(?:104|109|140|190))\b/g, `<span style="color: ${currentColors['Temperature']};">$1</span>`);
-                styledLine = styledLine.replace(/\b(M8[23])\b/g, `<span style="color: ${currentColors['Extruder Mode']};">$1</span>`);
-
-                styledLine = styledLine.replace(/\b(T)([-+]?\d+\.?\d*)/g, `<span style="color: ${currentColors['Tool Number (T)']};">$1$2</span>`);
-                styledLine = styledLine.replace(/\b(F)([-+]?\d+\.?\d*)/g, `<span style="color: ${currentColors['Feed Rate (F)']};">$1$2</span>`);
-                styledLine = styledLine.replace(/\b(S)([-+]?\d+\.?\d*)/g, `<span style="color: ${currentColors['Spindle Speed (S)']};">$1$2</span>`);
-                
-                styledLine = styledLine.replace(/\b(X)([-+]?\d+\.?\d*)?/g, `<span style="color: ${currentColors['X-Axis']};">$1$2</span>`);
-                styledLine = styledLine.replace(/\b(Y)([-+]?\d+\.?\d*)?/g, `<span style="color: ${currentColors['Y-Axis']};">$1$2</span>`);
-                styledLine = styledLine.replace(/\b(Z)([-+]?\d+\.?\d*)?/g, `<span style="color: ${currentColors['Z-Axis']};">$1$2</span>`);
-                styledLine = styledLine.replace(/\b([ABC])([-+]?\d+\.?\d*)?/g, `<span style="color: ${currentColors['Rotary Axes (A,B,C)']};">$1$2</span>`);
-                styledLine = styledLine.replace(/\b(E)([-+]?\d+\.?\d*)?/g, `<span style="color: ${currentColors['E-Axis (Extruder)']};">$1$2</span>`);
-
-                styledLine = styledLine.replace(/\b([IJK])([-+]?\d+\.?\d*)/g, `<span style="color: ${currentColors['Arc Center (I,J,K)']};">$1$2</span>`);
-                styledLine = styledLine.replace(/\b(R)([-+]?\d+\.?\d*)/g, `<span style="color: ${currentColors['Arc Radius (R)']};">$1$2</span>`);
-                styledLine = styledLine.replace(/\b(P)([-+]?\d+\.?\d*)/g, `<span style="color: ${currentColors['Special Motions']};">$1$2</span>`);
-
-                styledLine = styledLine.replace(/^(N)(\d+)/g, `<span style="color: ${currentColors['Line Number (N)']};">$1$2</span>`);
-
-                // Step 3: Restore comments, now styled
-                comments.forEach((comment, index) => {
-                    const commentSpan = `<span style="color: ${currentColors['Comments']}; font-style: italic;">${comment}</span>`;
-                    styledLine = styledLine.replace(`__COMMENT_${index}__`, commentSpan);
-                });
-
-                return `<div class="gcode-line">${styledLine}</div>`;
-            }).join('');
-
-            editor.innerHTML = html;
-
-            const bgRgb = GcodeColorUtils.hexToRgb(bgColor);
-            if (!bgRgb) {
-                document.getElementById('statsText').textContent = 'Invalid background color';
-                return;
-            }
-            const bgLum = GcodeColorUtils.getRelativeLuminance(bgRgb.r, bgRgb.g, bgRgb.b);
-            const isDark = GcodeColorUtils.isDarkBackground(bgColor);
-            document.getElementById('statsText').textContent = 
-                `Background Luminance: ${bgLum.toFixed(3)} (${isDark ? 'dark' : 'light'})`;
-        }
-
-        function renderLegend(bgColor) {
-            const container = document.getElementById('legendContainer');
-            const html = colorCategories.map(cat => {
-                const color = currentColors[cat.name];
-                if (!color) return '';
-                return `
-                    <div class="legend-item">
-                        <div class="legend-color" style="background-color: ${color};"></div>
-                        <div class="legend-info">
-                            <div class="legend-name">${cat.name}</div>
-                            <div class="legend-desc">${cat.example} | ${color}</div>
-                        </div>
-                    </div>
-                `;
-            }).join('');
-            container.innerHTML = html;
-        }
-
-        function applyBackground(color) {
-            document.getElementById('bgColorPicker').value = color;
-            document.getElementById('bgColorText').value = color;
-            updateColors(color);
-        }
-
-        // ============ INITIALIZATION ============
-
-        document.getElementById('bgColorPicker').addEventListener('input', (e) => {
-            document.getElementById('bgColorText').value = e.target.value;
-            updateColors(e.target.value);
-        });
-
-        document.getElementById('bgColorText').addEventListener('input', (e) => {
-            const value = e.target.value;
-            if (/^#[0-9A-Fa-f]{6}$/.test(value)) {
-                document.getElementById('bgColorPicker').value = value;
-                updateColors(value);
-            }
-        });
-
-        // Initial initialization
-        document.getElementById('gcodeTextarea').value = gcodeExample;
-        updateColors('#1e1e1e');
-
-        const toggleModeBtn = document.getElementById('toggleModeBtn');
-        const gcodeEditor = document.getElementById('gcodeEditor');
-        const gcodeTextarea = document.getElementById('gcodeTextarea');
-        let isEditMode = false;
-
-        toggleModeBtn.addEventListener('click', () => {
-            isEditMode = !isEditMode;
-            if (isEditMode) {
-                gcodeEditor.style.display = 'none';
-                gcodeTextarea.style.display = 'block';
-                gcodeTextarea.focus();
-                toggleModeBtn.textContent = 'View';
-            } else {
-                gcodeTextarea.style.display = 'none';
-                gcodeEditor.style.display = 'block';
-                toggleModeBtn.textContent = 'Edit';
-                const currentBgColor = document.getElementById('bgColorPicker').value;
-                updateColors(currentBgColor);
-            }
-        });
-    </script>
+  <!-- JavaScript modules - load in correct order -->
+  <script src="js/config.js"></script>
+  <script src="js/functions.js"></script>
+  <script src="js/main.js"></script>
 </body>
+
 </html>
