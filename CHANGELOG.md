@@ -2,6 +2,12 @@
 
 All notable changes to the "gcode-genius" extension will be documented in this file.
 
+## [0.1.6] - 2026-01-14
+
+### Fixed
+
+- **Parser**: Fixed a bug where G-code lines containing only axis coordinates (e.g., "X10 Y20") without an explicit movement command (G0/G1) were ignored. The parser now correctly handles these modal movements by applying the last active movement command, ensuring the entire toolpath is visualized.
+
 ## [0.1.5] - 2025-11-06
 
 ### Added
