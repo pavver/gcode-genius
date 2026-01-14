@@ -80,6 +80,7 @@ function parseLine(line, lineNumber, previousState) {
             if (commandNum === 0 || commandNum === 1 || commandNum === 2 || commandNum === 3) {
                 result.isMoveCommand = true;
                 result.moveCommandType = normalizedCommand;
+                newState.modalMoveCommand = normalizedCommand;
             }
 
             // Check for control commands that change state
@@ -111,6 +112,13 @@ function parseLine(line, lineNumber, previousState) {
             result.params[letter.toLowerCase()] = value;
         }
     });
+
+    // If there's no explicit move command, but there are axis params, treat it as a modal move
+    const hasAxisParams = result.params.x !== undefined || result.params.y !== undefined || result.params.z !== undefined;
+    if (!result.isMoveCommand && hasAxisParams && newState.modalMoveCommand) {
+        result.isMoveCommand = true;
+        result.moveCommandType = newState.modalMoveCommand;
+    }
 
     // Calculate endPosition based on the newState (which reflects G90/G91 changes)
     // and update the position in newState if a move occurred.
@@ -161,7 +169,7 @@ function parseGcode(gcode) {
     const parsedLines = [];
 
     // Initial state for the first line
-    let currentState = { x: 0, y: 0, z: 0, relative: false, arcCenterRelative: true };
+    let currentState = { x: 0, y: 0, z: 0, relative: false, arcCenterRelative: true, modalMoveCommand: 'G1' };
 
     for (let i = 0; i < lines.length; i++) {
         const line = lines[i];
@@ -192,7 +200,7 @@ function reparseFromLine(existingParsedData, newRawLines, startLineNumber) {
         currentState = JSON.parse(JSON.stringify(existingParsedData[startLineNumber - 2].state));
     } else {
         // If the change is on the first line, start with the initial state.
-        currentState = { x: 0, y: 0, z: 0, relative: false, arcCenterRelative: true };
+        currentState = { x: 0, y: 0, z: 0, relative: false, arcCenterRelative: true, modalMoveCommand: 'G1' };
     }
 
     // Re-parse all subsequent lines from the point of change to the end of the file.
